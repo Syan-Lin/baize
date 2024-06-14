@@ -1,16 +1,16 @@
 import argparse
 
-def init_parse():
+def init_parse() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Baize: 将 LLM 集成至你的命令行！')
 
-    parser.add_argument("prompt", nargs="?", type=str, help="命令行 Prompt")
+    parser.add_argument("prompt", nargs="*", type=str, help="命令行 Prompt")
 
     # 模型参数
     parser.add_argument('-s', '--stream', action='store_true', help='流式输出模式')
     parser.add_argument('-m', '--model', nargs=1, metavar='<model name>', type=str, help='设置模型')
     parser.add_argument('-t', '--templates', nargs=1, metavar='<template name>', type=str, help='Prompt 模板')
     parser.add_argument('-f', '--file', nargs="*", metavar='<file path>', type=str, help='上传文件')
-    parser.add_argument('--set', nargs=1, metavar='<model name>', help='设置当前模型')
+    parser.add_argument('--set', nargs=1, metavar='<model name>', help='设置默认模型')
 
     # 配置
     parser.add_argument('--setup', action='store_true', help='配置新模型')
