@@ -12,20 +12,20 @@ class BaseLLM(ABC):
 
 
     @abstractmethod
-    def message(self, message: str) -> str:
+    def message(self, message: list[dict]) -> str:
         raise NotImplementedError
 
 
     @abstractmethod
-    def stream_message(self, message: str) -> str:
+    def stream_message(self, message: list[dict]) -> str:
         raise NotImplementedError
 
 
     @abstractmethod
-    def upload_file(self, file_path: list, message: dict | None = None) -> list[dict]:
+    def upload_file(self, file_path: list | str, message: dict | None = None) -> list[dict]:
         raise NotImplementedError
 
 
     @abstractmethod
-    def upload_img(self, img_path: list, message: dict | None = None) -> list[dict]:
+    def upload_img(self, img_path: list | str, message: dict | None = None) -> list[dict]:
         raise NotImplementedError

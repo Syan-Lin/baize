@@ -1,6 +1,7 @@
 from typing import Generator
 from llm.base_llm import BaseLLM
 from openai import OpenAI
+from pathlib import Path
 
 class Qwen(BaseLLM):
     def __init__(self, model_name: str, model_config: dict):
@@ -30,7 +31,7 @@ class Qwen(BaseLLM):
         return response.choices[0].message.content
 
 
-    def stream_message(self, message: str) -> Generator:
+    def stream_message(self, message: list[dict]) -> Generator:
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=message,
@@ -45,9 +46,25 @@ class Qwen(BaseLLM):
                 yield chunk.choices[0].delta.content
 
 
-    def upload_file(self, file_path: list, message: dict | None = None) -> list[dict]:
-        return super().upload_file(file_path, message)
+    def upload_file(self, file_path: list | str, message: dict | None = None) -> list[dict]:
+        if isinstance(file_path, str):
+            file_path = [file_path]
+
+        files = []
+        for path in file_path:
+            files.append(self.client.files.create(file=Path(path), purpose="file-extract"))
+
+        file_content = ''
+        for file in files:
+            file_content += f'fileid://{file.id},'
+        file_content = file_content[:-1]
+
+        file_messages = []
+        file_messages.append({'role': 'system', 'content': file_content})
+        file_messages.append(message)
+
+        return file_messages
 
 
-    def upload_img(self, img_path: str, message: dict | None = None) -> list[dict]:
+    def upload_img(self, img_path: str | str, message: dict | None = None) -> list[dict]:
         return super().upload_img(img_path, message)
