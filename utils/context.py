@@ -3,8 +3,9 @@ import json
 from rich import print as rprint
 
 
-def save_previous(messages: list[dict], response: str):
-    messages.append({"role": "assistant", "content": response})
+def save_previous(messages: list[dict], response: str = ''):
+    if response != '':
+        messages.append({"role": "assistant", "content": response})
 
     user_home = os.path.expanduser('~')
     history_path = os.path.join(user_home, 'baize', 'history.json')

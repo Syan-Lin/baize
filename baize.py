@@ -190,15 +190,23 @@ def main() -> None:
     # 模型参数
     llm = config_model(args)
 
-    # 输入参数
-    messages = input_args_parse(args, llm)
+    if args.cli or args.clidetail:
+        # 命令行模式
+        from cli.cli import cli_main
+        cli_main(args, llm)
+    elif args.workflow:
+        # 工作流模式
+        pass
+    else:
+        # 输入参数
+        messages = input_args_parse(args, llm)
 
-    # 输出参数
-    response = output_parse(args, llm, messages)
+        # 输出参数
+        response = output_parse(args, llm, messages)
 
-    # 历史对话保存
-    from utils.context import save_previous
-    save_previous(messages, response)
+        # 历史对话保存
+        from utils.context import save_previous
+        save_previous(messages, response)
 
 if __name__ == '__main__':
     main()
