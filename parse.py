@@ -26,7 +26,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--log', action='store_true', help='调试模式')
     parser.add_argument('-c', '--cli', metavar='<prompt>', type=str, help='命令行模式')
     parser.add_argument('--clidetail', metavar='<prompt>', type=str, help='命令行详细模式')
-    parser.add_argument('-w', '--wrokflow', metavar='<workflow name>', help='设置工作流')
+    parser.add_argument('-w', '--workflow', metavar='<workflow name>', help='设置工作流')
 
     # 输入输出
     parser.add_argument('-C', '--copy', action='store_true', help='输出复制到剪贴板')
