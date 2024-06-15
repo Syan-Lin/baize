@@ -1,0 +1,18 @@
+{
+    "openai": {
+        "family": "OpenAI",
+        "models": ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo"]
+    },
+    "deepseek": {
+        "family": "DeepSeek",
+        "models": ["deepseek-chat", "deepseek-coder"]
+    },
+    "glm": {
+        "family": "智谱 AI",
+        "models": ["glm-4", "glm-4v", "glm-3-turbo"]
+    },
+    "qwen": {
+        "family": "通义千问",
+        "models": ["qwen-max", "qwen-long", "qwen-turbo", "qwen-plus"]
+    }
+}
