@@ -14,9 +14,9 @@ def get_llm(model_name: str, model_config: dict) -> BaseLLM:
     elif model_name in models['glm']['models']:
         from llm.glm import GLM
         llm = GLM(model_name, model_config)
-    elif model_name in models['openai']['models']:
-        from llm.openai import GPT
-        llm = GPT(model_name, model_config)
+    else:
+        rprint(f'[red]不支持模型 {model_name}[/red]')
+        sys.exit()
 
     return llm
 
