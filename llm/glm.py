@@ -1,9 +1,10 @@
 from typing import Generator
 from llm.base_llm import BaseLLM
-from openai import OpenAI
+from zhipuai import ZhipuAI
 from pathlib import Path
 
-class Qwen(BaseLLM):
+
+class GLM(BaseLLM):
     def __init__(self, model_name: str, model_config: dict):
         super().__init__(model_name, model_config)
         self.init()
@@ -11,12 +12,9 @@ class Qwen(BaseLLM):
 
     def init(self):
         api_key = self.model_config.get("api_key")
-        base_url = self.model_config.get("base_url")
         if api_key is None:
-            raise ValueError("Qwen 需要配置 API key")
-        elif base_url is None:
-            raise ValueError("Qwen 需要配置 Base URL")
-        self.client = OpenAI(api_key=api_key, base_url=base_url)
+            raise ValueError("GLM 需要配置 API key")
+        self.client = ZhipuAI(api_key=api_key)
 
 
     def message(self, message: list[dict]) -> str:
@@ -25,8 +23,6 @@ class Qwen(BaseLLM):
             messages=message,
             temperature=self.model_config.get("temp"),
             top_p=self.model_config.get("top_p"),
-            frequency_penalty=self.model_config.get("frequency_penalty"),
-            presence_penalty=self.model_config.get("presence_penalty"),
         )
         return response.choices[0].message.content
 
@@ -37,8 +33,6 @@ class Qwen(BaseLLM):
             messages=message,
             temperature=self.model_config.get("temp"),
             top_p=self.model_config.get("top_p"),
-            frequency_penalty=self.model_config.get("frequency_penalty"),
-            presence_penalty=self.model_config.get("presence_penalty"),
             stream=True,
         )
         for chunk in response:
@@ -47,20 +41,33 @@ class Qwen(BaseLLM):
 
 
     def upload_file(self, file_path: list | str, message: dict = None) -> list[dict]:
-        if isinstance(file_path, str):
-            file_path = [file_path]
-
-        files = []
-        for path in file_path:
-            files.append(self.client.files.create(file=Path(path), purpose="file-extract"))
-
-        file_content = ''
-        for file in files:
-            file_content += f'fileid://{file.id},'
-        file_content = file_content[:-1]
-
-        return [{'role': 'system', 'content': file_content}, message]
+        return super().upload_file(file_path, message)
 
 
     def upload_img(self, img_path: list | str, message: dict = None) -> list[dict]:
-        return super().upload_img(img_path, message)
+        if self.model_name != 'glm-4v':
+            return super().upload_img(img_path, message)
+
+        if isinstance(img_path, str):
+            img_path = [img_path]
+        if len(img_path) > 1:
+            raise ValueError("glm-4v 不支持多张图片")
+
+        import base64
+        imgs_base64 = []
+        for img in img_path:
+            with open(img, "rb") as f:
+                imgs_base64.append(base64.b64encode(f.read()))
+        img_message = {'role': 'user', 'content': []}
+        img_message['content'].append({
+            'type': 'text',
+            'text': message['content']
+        })
+        for img in imgs_base64:
+            img_message['content'].append({
+                'type': 'image_url',
+                'image_url': {
+                    'url': img.decode('utf-8')
+                }
+            })
+        return [img_message]

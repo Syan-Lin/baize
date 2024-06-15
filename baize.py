@@ -11,6 +11,9 @@ def get_llm(model_name: str, model_config: dict) -> BaseLLM:
     if model_name in models['qwen']['models']:
         from llm.qwen import Qwen
         llm = Qwen(model_name, model_config)
+    elif model_name in models['glm']['models']:
+        from llm.glm import GLM
+        llm = GLM(model_name, model_config)
     elif model_name in models['openai']['models']:
         from llm.openai import GPT
         llm = GPT(model_name, model_config)
@@ -75,21 +78,16 @@ def setting_args_parse(args: Namespace):
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     # Prompt 输入
-    if args.prompt:
-        input_prompt = args.prompt
-    else:
-        input_prompt = [sys.stdin.read()]
     if args.paste:
         import pyperclip
         input_prompt = [pyperclip.paste()]
+    else:
+        if args.prompt:
+            input_prompt = args.prompt
+        else:
+            input_prompt = [sys.stdin.read()]
 
     messages = []
-
-    # Context 引入
-    from utils.context import load_context
-    context = load_context()
-    if context != '':
-        messages.append({'role': 'system', 'content': context})
 
     # 历史对话引入
     if args.previous:
@@ -97,6 +95,12 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
         history = load_previous()
         if len(history) > 0:
             messages += history
+    else:
+        # Context 引入
+        from utils.context import load_context
+        context = load_context()
+        if context != '':
+            messages.append({'role': 'system', 'content': context})
 
     # 构造模板
     template = None
@@ -107,30 +111,34 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     if template is None:
         user_message = {'role': 'user', 'content': input_prompt[0]}
     else:
-        try:
-            template_format = template.format(input_prompt)
-        except Exception as e:
-            print(e)
-            sys.exit()
+        if '{}' not in template:
+            template_format = template + '\n' + input_prompt[0]
+        else:
+            format_num = template.count('{}')
+            if len(input_prompt) != format_num:
+                rprint(f'[red]输入参数数量与模板不一致， Prompt 模板中有 [green]{format_num}[/green] 个参数，而给了 [green]{len(input_prompt)}[/green] 个参数[/red]')
+                sys.exit()
+            template_format = template.format(*input_prompt)
         user_message = {'role': 'user', 'content': template_format}
 
     # 文件引入
     if args.file:
         try:
             file_message = llm.upload_file(args.file, user_message)
-            messages.append(file_message)
+            messages += file_message
         except NotImplementedError:
             rprint(f'[red]模型 {llm.model_name} 不支持文件上传[/red]')
             sys.exit()
     if args.img:
         try:
             img_message = llm.upload_img(args.img, user_message)
-            messages.append(img_message)
+            messages += img_message
         except NotImplementedError:
             rprint(f'[red]模型 {llm.model_name} 不支持图片上传[/red]')
             sys.exit()
 
-    messages.append(user_message)
+    if not args.file and not args.img:
+        messages.append(user_message)
 
     if args.log:
         from utils.context import print_messages
@@ -165,8 +173,9 @@ def output_parse(args: Namespace, llm: BaseLLM, messages: list[dict]):
         import pyperclip
         pyperclip.copy(buffer)
     if args.output:
-        from utils.context import save_output
-        save_output(buffer)
+        save_path = args.output[0]
+        with open(save_path, 'w', encoding='utf-8') as f:
+            f.write(buffer)
 
     return buffer
 

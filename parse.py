@@ -32,7 +32,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('-C', '--copy', action='store_true', help='输出复制到剪贴板')
     parser.add_argument('-P', '--paste', action='store_true', help='剪贴板作为输入')
     parser.add_argument('-M', '--markdown', action='store_true', help='输出渲染 Markdown')
-    parser.add_argument('-o', '--output', metavar='<file path>', help='输出到文件')
+    parser.add_argument('-o', '--output', nargs=1, metavar='<file path>', help='输出到文件')
     parser.add_argument('-v', '--voice', action='store_true', help='语音输出')
     parser.add_argument('-p', '--previous', action='store_true', help='将上次对话记录引入本次对话')
 
