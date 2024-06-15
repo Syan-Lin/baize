@@ -1,1 +1,6 @@
 __pycache__
+build
+dist
+*.spec
+*.png
+test.py
