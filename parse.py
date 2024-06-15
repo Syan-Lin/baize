@@ -10,6 +10,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('-m', '--model', nargs=1, metavar='<model name>', type=str, help='设置模型')
     parser.add_argument('-t', '--templates', nargs=1, metavar='<template name>', type=str, help='Prompt 模板')
     parser.add_argument('-f', '--file', nargs="*", metavar='<file path>', type=str, help='上传文件')
+    parser.add_argument('-i', '--img', nargs="*", metavar='<img path>', type=str, help='上传图片文件')
     parser.add_argument('--set', nargs=1, metavar='<model name>', help='设置默认模型')
 
     # 配置
@@ -17,6 +18,8 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--modellist', action='store_true', help='查看现有模型列表')
     parser.add_argument('-l', '--list', action='store_true', help='查看现有 Prompt 模板列表')
     parser.add_argument('--context', action='store_true', help='查看 Context Prompt')
+    parser.add_argument('--workflowlist', action='store_true', help='查看 Workflow 列表')
+    parser.add_argument('--resetcontext', action='store_true', help='删除 Context Prompt')
     parser.add_argument('--setcontext', nargs=1, metavar='Context Prompt', type=str, help='设置 Context Prompt')
 
     # 执行模式
@@ -28,8 +31,10 @@ def init_parse() -> argparse.Namespace:
     # 输入输出
     parser.add_argument('-C', '--copy', action='store_true', help='输出复制到剪贴板')
     parser.add_argument('-P', '--paste', action='store_true', help='剪贴板作为输入')
+    parser.add_argument('-M', '--markdown', action='store_true', help='输出渲染 Markdown')
     parser.add_argument('-o', '--output', metavar='<file path>', help='输出到文件')
     parser.add_argument('-v', '--voice', action='store_true', help='语音输出')
+    parser.add_argument('-p', '--previous', action='store_true', help='将上次对话记录引入本次对话')
 
     args = parser.parse_args()
 

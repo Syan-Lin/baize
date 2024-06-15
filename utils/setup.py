@@ -109,15 +109,19 @@ def setup():
         api_key = input()
     elif model_family == 'openai':
         model_name = choose_model(models['openai']['models'])
+        base_url = models['openai']['base_url']
         api_key = input_api_key()
     elif model_family == 'glm':
         model_name = choose_model(models['glm']['models'])
+        base_url = models['glm']['base_url']
         api_key = input_api_key()
     elif model_family == 'qwen':
         model_name = choose_model(models['qwen']['models'])
+        base_url = models['qwen']['base_url']
         api_key = input_api_key()
     elif model_family == 'deepseek':
         model_name = choose_model(models['deepseek']['models'])
+        base_url = models['deepseek']['base_url']
         api_key = input_api_key()
     else:
         raise ValueError('Unknown model family')
@@ -136,11 +140,10 @@ def setup():
     config = model_config()
     config['default_model'] = model_name
     config[model_name] = {}
+    config[model_name]['base_url'] = base_url
 
     if api_key != '':
         config[model_name]['api_key'] = api_key
-    if base_url != '':
-        config[model_name]['base_url'] = base_url
     if temperature is not None:
         config[model_name]['temperature'] = temperature
     if frequency_penalty is not None:

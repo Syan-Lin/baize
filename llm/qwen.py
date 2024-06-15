@@ -46,7 +46,7 @@ class Qwen(BaseLLM):
                 yield chunk.choices[0].delta.content
 
 
-    def upload_file(self, file_path: list | str, message: dict | None = None) -> list[dict]:
+    def upload_file(self, file_path: list | str, message: dict = None) -> list[dict]:
         if isinstance(file_path, str):
             file_path = [file_path]
 
@@ -59,12 +59,8 @@ class Qwen(BaseLLM):
             file_content += f'fileid://{file.id},'
         file_content = file_content[:-1]
 
-        file_messages = []
-        file_messages.append({'role': 'system', 'content': file_content})
-        file_messages.append(message)
-
-        return file_messages
+        return {'role': 'system', 'content': file_content}
 
 
-    def upload_img(self, img_path: str | str, message: dict | None = None) -> list[dict]:
+    def upload_img(self, img_path: str | str, message: dict = None) -> list[dict]:
         return super().upload_img(img_path, message)

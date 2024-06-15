@@ -22,10 +22,10 @@ class BaseLLM(ABC):
 
 
     @abstractmethod
-    def upload_file(self, file_path: list | str, message: dict | None = None) -> list[dict]:
+    def upload_file(self, file_path: list | str, message: dict = None) -> dict:
         raise NotImplementedError
 
 
     @abstractmethod
-    def upload_img(self, img_path: list | str, message: dict | None = None) -> list[dict]:
+    def upload_img(self, img_path: list | str, message: dict = None) -> dict:
         raise NotImplementedError

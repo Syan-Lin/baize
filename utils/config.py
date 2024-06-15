@@ -1,19 +1,22 @@
 import os
 import json
 import yaml
+from rich import print as rprint
 
-def models_info():
+def models_info() -> dict:
+    '''获取所有支持的模型信息'''
     user_home = os.path.expanduser('~')
     models_info_path = os.path.join(user_home, 'baize', 'models.json')
 
     if not os.path.exists(models_info_path):
-        raise FileNotFoundError(f'{models_info_path} not found, please reinstall baize.')
+        raise FileNotFoundError(f'路径 {models_info_path} 不存在, 请重新安装 baize。')
 
     with open(models_info_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
-def model_config():
+def model_config() -> dict:
+    '''获取所有已注册的模型信息'''
     user_home = os.path.expanduser('~')
     config_path = os.path.join(user_home, 'baize', 'config.yaml')
 
@@ -24,9 +27,35 @@ def model_config():
         return yaml.safe_load(f)
 
 
+def set_default_model(model_name: str):
+    config = model_config()
+    if model_name not in list(config.keys()):
+        raise ValueError(f'模型 {model_name} 未注册，无法设置为默认模型！')
+    config['default_model'] = model_name
+    save_model_config(config)
+    rprint(f'[bold green]已将模型 {model_name} 设置为默认模型。[/bold green]')
+
+
 def save_model_config(config: dict):
     user_home = os.path.expanduser('~')
     config_path = os.path.join(user_home, 'baize', 'config.yaml')
 
     with open(config_path, 'w', encoding='utf-8') as f:
         yaml.dump(config, f, allow_unicode=True)
+
+
+def print_model_list():
+    models = model_config()
+
+    if len(models) == 0:
+        rprint('[red]无模型可用，请执行[/red] [green]`baize --setup`[/green] [red]进行初始化[/red]')
+        return
+
+    used_model = models['default_model']
+    models.pop('default_model')
+
+    for model_name in models.keys():
+        if model_name == used_model:
+            rprint(f'[bold green]*{model_name}[/bold green]')
+        else:
+            print(model_name)
