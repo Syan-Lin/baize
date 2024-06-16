@@ -62,32 +62,13 @@ def input_setting() -> float | None:
     return setting
 
 
-def print_config(model_family: str, model_name: str, base_url: str, api_key: str,
-                 temperature: float | None, frequency_penalty: float | None, presence_penalty: float | None):
+def print_config(model_name: str, config: dict):
     title = '✨ 您的模型配置 ✨'
     text = []
-    text.append(f'产品族: \t\t{model_family}')
     text.append(f'模型名: \t\t{model_name}')
-    if base_url != '':
-        text.append(f'BASE_URL: \t\t{base_url}')
-    else:
-        text.append(f'BASE_URL: \t\t默认')
-    if api_key != '':
-        text.append(f'API_KEY: \t\t{api_key}')
-    else:
-        text.append(f'API_KEY: \t\tNone')
-    if temperature is None:
-        text.append('temperature: \t\t默认')
-    else:
-        text.append(f'temperature: \t\t{temperature}')
-    if frequency_penalty is None:
-        text.append('frequency penalty: \t默认')
-    else:
-        text.append(f'frequency penalty: \t{frequency_penalty}')
-    if presence_penalty is None:
-        text.append('presence penalty: \t默认')
-    else:
-        text.append(f'presence penalty: \t{presence_penalty}')
+
+    for key, value in config.items():
+        text.append(f'{key}: \t\t{value}')
 
     box(title=title, texts=text, title_color='green', box_color='green', title_align='upcenter')
 
@@ -133,9 +114,6 @@ def setup():
     rprint('请输入 [b green]presence penalty[/b green] (ENTER 默认): ', end='')
     presence_penalty = input_setting()
 
-    print()
-    print_config(model_family, model_name, base_url, api_key, temperature, frequency_penalty, presence_penalty)
-
     from utils.config import model_config
     config = model_config()
     config['default_model'] = model_name
@@ -150,6 +128,9 @@ def setup():
         config[model_name]['frequency_penalty'] = frequency_penalty
     if presence_penalty is not None:
         config[model_name]['presence_penalty'] = presence_penalty
+
+    print()
+    print_config(model_name, config[model_name])
 
     save = ''
     while save != 'y' and save != 'n':
