@@ -124,6 +124,8 @@ def setup():
     presence_penalty = input_setting()
 
     config['default_model'] = model_name
+    if model_name not in config:
+        config[model_name] = {}
     config[model_name]['base_url'] = base_url
 
     if api_key != '':
