@@ -22,10 +22,21 @@ class BaseLLM(ABC):
 
 
     @abstractmethod
-    def upload_file(self, file_path: list | str, message: dict = None) -> dict:
-        raise NotImplementedError
+    def upload_file(self, file_path: list | str, message: dict = None) -> list[dict]:
+        if isinstance(file_path, str):
+            file_path = [file_path]
+
+        from utils.file import parse_file
+        files = parse_file(file_path)
+
+        messages = []
+        for file in files:
+            messages.append({'role': 'system', 'content': f'{file}'})
+        messages.append(message)
+
+        return messages
 
 
     @abstractmethod
-    def upload_img(self, img_path: list | str, message: dict = None) -> dict:
-        raise NotImplementedError
+    def upload_img(self, img_path: list | str, message: dict = None) -> list[dict]:
+        raise NotImplementedError(f'{self.model_name} 不支持图片上传')
