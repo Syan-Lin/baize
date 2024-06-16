@@ -23,6 +23,6 @@ def parse_file(file_path: list | str) -> list[str]:
         else:
             with open(file, 'r', encoding='utf-8') as f:
                 file_content += f.read()
-        file_content += '\n```\n\n'
+        file_content += '\n```\n'
         result.append(file_content)
     return result
