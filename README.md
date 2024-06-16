@@ -25,6 +25,8 @@ Linux: 在 `~/.bashrc` 中添加 `export PATH=<你的程序解压的地方>`，�
 Mac: 在 `~/.bash_profile` 中添加 `export PATH=<你的程序解压的地方>`
 
 ## 手动构建二进制程序
+你的 Python 版本需要 >= 3.12
+
 1. 克隆本仓库
 
 ```bash
@@ -98,10 +100,10 @@ baize 你好 8 --template -t example -s
 cat book.txt | baize -t summary -s
 ```
 
-当然你也可以构建更复杂的流程，将总结再翻译成英文
+当然你也可以构建更复杂的流程，将总结再翻译成英文并保存下来
 
 ```bash
-cat book.txt | baize -t summary | baize -t trans2eng
+cat book.txt | baize -t summary | baize -t trans2eng > eng.txt
 ```
 
 ### 多模态

@@ -74,6 +74,14 @@ def setting_args_parse(args: Namespace):
         from utils.context import save_context
         save_context('')
         sys.exit()
+    elif args.createtemplate:
+        from utils.templates import create_template
+        create_template()
+        sys.exit()
+    elif args.deletetemplate:
+        from utils.templates import delete_template
+        delete_template(args.deletetemplate)
+        sys.exit()
 
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
@@ -160,13 +168,14 @@ def output_parse(args: Namespace, llm: BaseLLM, messages: list[dict]):
             buffer += block
             sys.stdout.write(block)
             sys.stdout.flush()
+        sys.stdout.write('\n')
     else:
         response = llm.message(messages)
         buffer += response
         if args.markdown:
-            print_markdown(response)
+            print_markdown(response + '\n')
         else:
-            sys.stdout.write(response)
+            sys.stdout.write(response + '\n')
             sys.stdout.flush()
 
     if args.copy:

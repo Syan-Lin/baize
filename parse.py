@@ -36,6 +36,10 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('-v', '--voice', action='store_true', help='语音输出')
     parser.add_argument('-p', '--previous', action='store_true', help='将上次对话记录引入本次对话')
 
+    # Prompt 配置
+    parser.add_argument('--createtemplate', action='store_true', help='创建 Prompt Template')
+    parser.add_argument('--deletetemplate', nargs="*", metavar='<template>', type=str, help='删除 Prompt Template')
+
     args = parser.parse_args()
 
     return args
