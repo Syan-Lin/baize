@@ -92,7 +92,7 @@ baize 你好 -s
 通过 `--template -t` 参数，可以对 Prompt 模板进行格式化，从而很方便地调用各种模板
 
 ```bash
-baize 你好 8 --template -t example -s
+baize 你好 8 -t example -s
 ```
 
 你可以通过 `baize --list` 查看当前可用的模板。
@@ -187,7 +187,7 @@ baize --setcontext 我是一个程序员
 
 通过 `--setcontext` 就可以设置一个 Context，这个设置是全局生效的，之后每次调用 LLM 都会附带这个 Context
 
-你可以通过 `--context` 查看当前所用的 Context；通过 `resetcontext` 删除当前的 Context
+你可以通过 `--context` 查看当前所用的 Context；通过 `--resetcontext` 删除当前的 Context
 
 ```bash
 baize --context
