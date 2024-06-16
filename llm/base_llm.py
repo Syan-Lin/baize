@@ -22,7 +22,7 @@ class BaseLLM(ABC):
 
 
     @abstractmethod
-    def upload_file(self, file_path: list | str, message: dict = None) -> list[dict]:
+    def upload_file(self, file_path: list | str, message: dict) -> list[dict]:
         if isinstance(file_path, str):
             file_path = [file_path]
 
@@ -38,5 +38,5 @@ class BaseLLM(ABC):
 
 
     @abstractmethod
-    def upload_img(self, img_path: list | str, message: dict = None) -> list[dict]:
+    def upload_img(self, img_path: list | str, message: dict) -> list[dict]:
         raise NotImplementedError(f'{self.model_name} 不支持图片上传')

@@ -44,11 +44,11 @@ class GPT(BaseLLM):
                 yield chunk.choices[0].delta.content
 
 
-    def upload_file(self, file_path: list | str, message: dict = None) -> dict:
+    def upload_file(self, file_path: list | str, message: dict) -> dict:
         return super().upload_file(file_path, message)
 
 
-    def upload_img(self, img_path: list | str, message: dict = None) -> dict:
+    def upload_img(self, img_path: list | str, message: dict) -> dict:
         if self.model_name != 'gpt-4o' and self.model_name != 'gpt-4-turbo':
             return super().upload_img(img_path, message)
 

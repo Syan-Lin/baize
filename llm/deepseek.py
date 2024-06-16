@@ -46,9 +46,9 @@ class DeepSeek(BaseLLM):
                 yield chunk.choices[0].delta.content
 
 
-    def upload_file(self, file_path: list | str, message: dict = None) -> list[dict]:
+    def upload_file(self, file_path: list | str, message: dict) -> list[dict]:
         return super().upload_file(file_path, message)
 
 
-    def upload_img(self, img_path: list | str, message: dict = None) -> list[dict]:
+    def upload_img(self, img_path: list | str, message: dict) -> list[dict]:
         return super().upload_img(img_path, message)
