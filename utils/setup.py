@@ -40,12 +40,12 @@ def choose_model(model_list: list) -> str:
     return model_list[choice - 1]
 
 
-def input_api_key() -> str:
-    api_key = ''
-    while len(api_key) == 0:
-        rprint('请输入 [b green]API_KEY[/b green]: ', end='')
-        api_key = input()
-    return api_key
+def input_param(param_name: str) -> str:
+    param = ''
+    while len(param) == 0:
+        rprint(f'请输入 [b green]{param_name}[/b green]: ', end='')
+        param = input()
+    return param
 
 
 def input_setting() -> float | None:
@@ -78,7 +78,9 @@ def setup():
     models = models_info()
     model_family = choose_model_family(models)
 
-    model_name, base_url = '', ''
+    from utils.config import model_config
+    config = model_config()
+
     if model_family == '自定义':
         while len(model_name) == 0:
             rprint('请输入 [b green]模型名称[/b green]: ', end='')
@@ -91,19 +93,26 @@ def setup():
     elif model_family == 'openai':
         model_name = choose_model(models['openai']['models'])
         base_url = models['openai']['base_url']
-        api_key = input_api_key()
+        api_key = input_param('API KEY')
     elif model_family == 'glm':
         model_name = choose_model(models['glm']['models'])
         base_url = models['glm']['base_url']
-        api_key = input_api_key()
+        api_key = input_param('API KEY')
     elif model_family == 'qwen':
         model_name = choose_model(models['qwen']['models'])
         base_url = models['qwen']['base_url']
-        api_key = input_api_key()
+        api_key = input_param('API KEY')
     elif model_family == 'deepseek':
         model_name = choose_model(models['deepseek']['models'])
         base_url = models['deepseek']['base_url']
-        api_key = input_api_key()
+        api_key = input_param('API KEY')
+    elif model_family == 'doubao':
+        rprint('[yellow]豆包大模型的模型选择由控制台的推理接入点控制[/yellow]')
+        model_name = choose_model(models['doubao']['models'])
+        base_url = models['doubao']['base_url']
+        api_key = input_param('API KEY')
+        endpoint_id = input_param('推理接入点 ID')
+        config[model_name]['endpoint_id'] = endpoint_id
     else:
         raise ValueError('Unknown model family')
 
@@ -114,10 +123,7 @@ def setup():
     rprint('请输入 [b green]presence penalty[/b green] (ENTER 默认): ', end='')
     presence_penalty = input_setting()
 
-    from utils.config import model_config
-    config = model_config()
     config['default_model'] = model_name
-    config[model_name] = {}
     config[model_name]['base_url'] = base_url
 
     if api_key != '':

@@ -9,6 +9,7 @@ baize 是一个将 LLM 能力集成至 CLI 的工具框架，支持多种 LLM �
 - [通义千问](https://bailian.console.aliyun.com/)
 - [智谱 AI](https://open.bigmodel.cn/)
 - [DeepSeek](https://platform.deepseek.com/)
+- [豆包](https://www.volcengine.com/product/doubao)
 
 # 为什么需要 baize
 

@@ -18,5 +18,10 @@
         "family": "通义千问",
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "models": ["qwen-max", "qwen-long", "qwen-turbo", "qwen-plus"]
+    },
+    "doubao": {
+        "family": "豆包",
+        "base_url": "default",
+        "models": ["doubao"]
     }
 }
