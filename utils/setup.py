@@ -140,7 +140,7 @@ def setup():
 
     save = ''
     while save != 'y' and save != 'n':
-        save = input('是否保存配置? (y/n): ')
+        save = input('保存配置 [y/n]: ')
 
     if save == 'y':
         from utils.config import save_model_config

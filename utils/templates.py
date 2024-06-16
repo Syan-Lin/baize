@@ -159,7 +159,7 @@ def delete_template(delete_templates: list[str]):
                 break
     print_template_table(delete_template_meta)
 
-    rprint('[green]确认删除这些模板吗？(y/n)[/green]', end='')
+    rprint('[green]确认删除 [/green][y/n]: ', end='')
     choice = ''
     while choice != 'y' and choice != 'n':
         choice = input()
