@@ -130,11 +130,17 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
         from utils.templates import get_template
         template = get_template(args.templates[0])
 
+    def expand_prompt(input_prompt: list[str]) -> str:
+        prompt = ''
+        for seg in input_prompt:
+            prompt += seg + ' '
+        return prompt
+
     if template is None:
-        user_message = {'role': 'user', 'content': input_prompt[0]}
+        user_message = {'role': 'user', 'content': expand_prompt(input_prompt)}
     else:
         if '{}' not in template:
-            template_format = template + '\n' + input_prompt[0]
+            template_format = template + '\n' + expand_prompt(input_prompt)
         else:
             format_num = template.count('{}')
             if len(input_prompt) != format_num:
