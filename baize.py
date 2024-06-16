@@ -69,9 +69,6 @@ def setting_args_parse(args: Namespace):
         else:
             print('Context 未设置')
         sys.exit()
-    elif args.workflowlist:
-        print('workflowlist')
-        sys.exit()
     elif args.setcontext:
         from utils.context import save_context
         save_context(args.setcontext[0])
@@ -214,9 +211,6 @@ def main() -> None:
         # 命令行模式
         from cli.cli import cli_main
         cli_main(args, llm)
-    elif args.workflow:
-        # 工作流模式
-        pass
     else:
         # 输入参数
         messages = input_args_parse(args, llm)
