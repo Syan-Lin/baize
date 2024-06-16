@@ -33,7 +33,6 @@ Linux: 在 `~/.bashrc` 中添加 `export PATH=<你的程序解压的地方>`，�
 Mac: 在 `~/.bash_profile` 中添加 `export PATH=<你的程序解压的地方>`
 
 ## 手动构建二进制程序
-你的 Python 版本需要 >= 3.12
 
 1. 克隆本仓库
 
@@ -48,7 +47,7 @@ cd baize
 pip install -r requirements.txt
 ```
 
-> 请你确保你的 Python 版本 >= 3.10
+> 请你确保你的 Python 版本 >= 3.12
 
 3. 构建二进制程序
 
