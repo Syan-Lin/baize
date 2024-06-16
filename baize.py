@@ -88,6 +88,11 @@ def setting_args_parse(args: Namespace):
         from utils.templates import delete_template
         delete_template(args.deletetemplate)
         sys.exit()
+    elif args.showtemplate:
+        from utils.templates import get_template
+        template = get_template(args.showtemplate[0])
+        print_markdown(template)
+        sys.exit()
 
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
