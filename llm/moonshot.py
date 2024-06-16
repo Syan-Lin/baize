@@ -3,7 +3,7 @@ from llm.base_llm import BaseLLM
 from openai import OpenAI
 from pathlib import Path
 
-class DeepSeek(BaseLLM):
+class Moonshot(BaseLLM):
     def __init__(self, model_name: str, model_config: dict):
         super().__init__(model_name, model_config)
         self.init()
@@ -13,9 +13,9 @@ class DeepSeek(BaseLLM):
         api_key = self.model_config.get("api_key")
         base_url = self.model_config.get("base_url")
         if api_key is None:
-            raise ValueError("DeepSeek 需要配置 API key")
+            raise ValueError("Moonshot 需要配置 API key")
         elif base_url is None:
-            raise ValueError("DeepSeek 需要配置 Base URL")
+            raise ValueError("Moonshot 需要配置 Base URL")
         self.client = OpenAI(api_key=api_key, base_url=base_url)
 
 

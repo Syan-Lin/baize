@@ -106,6 +106,10 @@ def setup():
         model_name = choose_model(models['deepseek']['models'])
         base_url = models['deepseek']['base_url']
         api_key = input_param('API KEY')
+    elif model_family == 'moonshot':
+        model_name = choose_model(models['moonshot']['models'])
+        base_url = models['moonshot']['base_url']
+        api_key = input_param('API KEY')
     elif model_family == 'doubao':
         rprint('[yellow]豆包大模型的模型选择由控制台的推理接入点控制[/yellow]')
         model_name = choose_model(models['doubao']['models'])
