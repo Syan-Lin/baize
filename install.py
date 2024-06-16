@@ -47,6 +47,8 @@ if __name__ == "__main__":
         result = subprocess.run('pyinstaller --onefile baize.py', capture_output=True, text=True, shell=True, encoding='utf-8')
         if result.stdout:
             print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
 
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
     excute_file = os.listdir(os.path.join(script_dir, 'dist'))[0]
