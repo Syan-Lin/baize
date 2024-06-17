@@ -120,6 +120,13 @@ cat book.txt | baize -t summary -s
 cat book.txt | baize -t summary | baize -t trans2eng > eng.txt
 ```
 
+聪明的你一定一下就能想到如何将这个用法结合到自己的工作生活中，例如自动生成 commit message
+
+```bash
+git add .
+git diff HEAD | baize -t commit
+```
+
 ### 多模态
 
 对于多模态模型，baize 也提供了对应的功能，通过 `--file -f` 上传文本文件，`--img -i` 上传图片

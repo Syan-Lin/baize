@@ -1,0 +1,6 @@
+{
+    "describe": "基于 git diff 生成 commit message",
+    "author": "syan-lin",
+    "date": "2024-06-18",
+    "source": "https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#commit"
+}
