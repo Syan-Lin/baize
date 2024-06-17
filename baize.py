@@ -4,6 +4,10 @@ from utils.render import print_markdown
 from rich import print as rprint
 from argparse import Namespace
 
+# ======版本号====== #
+___VERSION___ = '0.0'
+# ================= #
+
 
 def get_llm(model_name: str, model_config: dict) -> BaseLLM:
     from utils.config import models_info
@@ -101,7 +105,7 @@ def setting_args_parse(args: Namespace):
         init_env(args.init[0])
         sys.exit()
     elif args.version:
-        print('baize 0.0')
+        print(f'baize {___VERSION___}')
         sys.exit()
 
 
