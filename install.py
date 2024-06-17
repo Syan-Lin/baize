@@ -3,6 +3,7 @@ import shutil
 import sys
 from rich.console import Console
 from importlib.metadata import distributions
+from rich import print as rprint
 
 
 def is_package_installed(package_name):
@@ -23,8 +24,11 @@ def copy_template_files(base_dir: str):
     template_dir = os.path.join(base_dir, 'templates')
     if not os.path.exists(template_dir):
         os.makedirs(template_dir)
-    source_dir = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'templates')
+    else:
+        shutil.rmtree(template_dir)
+        os.makedirs(template_dir)
 
+    source_dir = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'templates')
     for item in os.listdir(source_dir):
         item_path = os.path.join(source_dir, item)
         if os.path.isdir(item_path):
@@ -63,4 +67,4 @@ if __name__ == "__main__":
     copy_config_files(base_dir)
     copy_template_files(base_dir)
 
-    print(f'程序已被安装至 `{base_dir}`，请手动将程序添加至环境变量中')
+    rprint(f'程序已被安装至 [green]`{base_dir}`[/green]，请手动将程序添加至环境变量中')
