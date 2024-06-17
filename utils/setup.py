@@ -1,8 +1,52 @@
+import os
 from rich.console import Console
 from rich import print as rprint
 from pyboxmaker import box
 
 console = Console()
+
+def append_path(bash_file: str):
+    file_path = os.path.expanduser(f'~/{bash_file}')
+
+    if not os.path.exists(file_path):
+        rprint(f'文件不存在: {file_path}')
+        return
+
+    root = os.path.expanduser('~')
+    baize_path = os.path.join(root, 'baize')
+    append_line = f'export PATH="$PATH:{baize_path}"'
+
+    with open(file_path, 'r') as f:
+        file_content = f.read()
+    if append_line not in file_content:
+        with open(file_path, 'a') as f:
+            f.write(append_line + '\n')
+        rprint(f'路径已写入: {file_path}，请重启终端')
+    else:
+        rprint(f'路径在 {file_path} 已存在，退出...')
+
+
+def init_env(bash: str):
+    import platform
+    system_name = platform.system()
+
+    if system_name == 'Linux':
+        if bash == 'bash':
+            append_path('.bashrc')
+        elif bash == 'zsh':
+            append_path('.zshrc')
+        else:
+            raise NotImplementedError(f'不支持的Shell: {bash}')
+    elif system_name == 'Darwin':
+        if bash == 'bash':
+            append_path('.bash_profile')
+        elif bash == 'zsh':
+            append_path('.zshrc')
+        else:
+            raise NotImplementedError(f'不支持的Shell: {bash}')
+    else:
+        raise NotImplementedError(f'不支持的操作系统: {system_name}，请手动配置环境变量')
+
 
 def choose_model_family(models: dict) -> int:
     print('选择产品族: ')

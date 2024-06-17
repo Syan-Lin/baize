@@ -14,6 +14,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--set', nargs=1, metavar='<model name>', help='设置默认模型')
 
     # 配置
+    parser.add_argument('--init', nargs=1, metavar='<bash>', type=str, help='初始化路径环境变量')
     parser.add_argument('--setup', action='store_true', help='配置新模型')
     parser.add_argument('--modellist', action='store_true', help='查看现有模型列表')
     parser.add_argument('-l', '--list', action='store_true', help='查看现有 Prompt 模板列表')

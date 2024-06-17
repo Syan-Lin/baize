@@ -96,6 +96,10 @@ def setting_args_parse(args: Namespace):
         template = get_template(args.showtemplate[0])
         print_markdown(template)
         sys.exit()
+    elif args.init:
+        from utils.setup import init_env
+        init_env(args.init[0])
+        sys.exit()
 
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:

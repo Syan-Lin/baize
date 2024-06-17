@@ -57,7 +57,14 @@ python install.py
 
 4. 添加系统路径
 
-安装程序默认会安装在用户目录下，如果你是 Windows，则是在 `C:\Users\<你的用户名>\baize`；如果你是 Linux 或 Mac，则是在 `~/baize`
+目前支持 Linux 和 Mac 下的 bash 和 zsh，Windows 需要手动添加系统路径
+
+```bash
+# 如果你用的是 bash
+~/baize/baize --init bash
+# 如果你用的是 zsh
+~/baize/baize --init zsh
+```
 
 # 快速开始
 首次运行需要先进行模型的配置，配置文件在 `baize/config.yaml` 中，之后你可以再次运行 `baize --setup` 添加配置
