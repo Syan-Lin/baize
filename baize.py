@@ -114,6 +114,8 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     if args.paste:
         import pyperclip
         input_prompt = [pyperclip.paste()]
+        if args.prompt:
+            input_prompt = args.prompt + '\n' + input_prompt
     else:
         if args.prompt:
             input_prompt = args.prompt
