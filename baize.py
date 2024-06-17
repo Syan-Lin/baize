@@ -100,6 +100,9 @@ def setting_args_parse(args: Namespace):
         from utils.setup import init_env
         init_env(args.init[0])
         sys.exit()
+    elif args.version:
+        print('baize 0.0')
+        sys.exit()
 
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
