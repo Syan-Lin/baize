@@ -9,14 +9,20 @@ from utils.context import print_messages
 
 
 def make_cli_prompt(args: Namespace) -> list[dict]:
-    if args.cli:
-        input_prompt = args.cli
+    # Prompt 输入
+    if not args.prompt and not args.paste:
+        rprint('[red]错误：没有 Prpmpt 输入[/red]')
+        sys.exit(1)
+    if args.paste:
+        import pyperclip
+        input_prompt = [pyperclip.paste()]
     else:
-        input_prompt = args.clidetail
+        input_prompt = args.prompt
 
+    from utils.templates import expand_prompt
     messages = []
     template = get_template('cli_mode')
-    template_format = template + '\n' + input_prompt
+    template_format = template + '\n' + expand_prompt(input_prompt)
     user_message = {'role': 'user', 'content': template_format}
     messages.append(user_message)
 

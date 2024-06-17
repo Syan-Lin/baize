@@ -4,6 +4,13 @@ import json
 from rich import print as rprint
 
 
+def expand_prompt(input_prompt: list[str]) -> str:
+    prompt = ''
+    for seg in input_prompt:
+        prompt += seg + ' '
+    return prompt
+
+
 def get_template_path() -> str:
     user_home = os.path.expanduser('~')
     template_root_path = os.path.join(user_home, 'baize', 'templates')

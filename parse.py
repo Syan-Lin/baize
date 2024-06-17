@@ -23,8 +23,8 @@ def init_parse() -> argparse.Namespace:
 
     # 执行模式
     parser.add_argument('--log', action='store_true', help='调试模式')
-    parser.add_argument('-c', '--cli', metavar='<prompt>', type=str, help='命令行模式')
-    parser.add_argument('--clidetail', metavar='<prompt>', type=str, help='命令行详细模式')
+    parser.add_argument('-c', '--cli', action='store_true', help='命令行模式')
+    parser.add_argument('--clidetail', action='store_true', help='命令行详细模式')
 
     # 输入输出
     parser.add_argument('-C', '--copy', action='store_true', help='输出复制到剪贴板')
