@@ -128,7 +128,7 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     template = None
     if args.template:
         from utils.templates import get_template
-        template = get_template(args.templates[0])
+        template = get_template(args.template[0])
 
     from utils.templates import expand_prompt
     if template is None:
