@@ -16,8 +16,8 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
     if args.paste:
         import pyperclip
         input_prompt = [pyperclip.paste()]
-    else:
-        input_prompt = args.prompt
+    if args.prompt:
+        input_prompt = args.prompt + ['\n'] + input_prompt
 
     from utils.templates import expand_prompt
     messages = []
