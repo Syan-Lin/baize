@@ -66,6 +66,13 @@ python install.py
 ~/baize/baize --init zsh
 ```
 
+5. 检查安装
+
+```bash
+# 如果正常输出版本信息，则代表安装成功
+baize --version
+```
+
 # 快速开始
 首次运行需要先进行模型的配置，配置文件在 `baize/config.yaml` 中，之后你可以再次运行 `baize --setup` 添加配置
 
