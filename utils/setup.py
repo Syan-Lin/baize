@@ -84,26 +84,19 @@ def choose_model(model_list: list) -> str:
     return model_list[choice - 1]
 
 
-def input_param(param_name: str) -> str:
+def input_param(param_name: str, skip: bool = False) -> str | None:
     param = ''
     while len(param) == 0:
-        rprint(f'请输入 [b green]{param_name}[/b green]: ', end='')
+        if skip:
+            rprint(f'请输入 [b green]{param_name}[/b green] (ENTER 默认): ', end='')
+        else:
+            rprint(f'请输入 [b green]{param_name}[/b green]: ', end='')
         param = input()
+        if skip:
+            if len(param) == 0:
+                return None
+            break
     return param
-
-
-def input_setting() -> float | None:
-    setting = None
-    while setting is None:
-        setting = input()
-        if setting == '':
-            return None
-        try:
-            setting = float(setting)
-        except ValueError:
-            print('请输入有效的数字')
-            setting = None
-    return setting
 
 
 def print_config(model_name: str, config: dict):
@@ -124,69 +117,45 @@ def setup():
 
     from utils.config import model_config
     config = model_config()
+    config_name = input_param('配置名')
+    config['default_config'] = config_name
+    config[config_name] = {}
+    new_config = config[config_name]
 
     if model_family == '自定义':
-        while len(model_name) == 0:
-            rprint('请输入 [b green]模型名称[/b green]: ', end='')
-            model_name = input()
-        while len(base_url) == 0:
-            rprint('请输入 [b green]BASE_URL[/b green]: ', end='')
-            base_url = input()
-        rprint('请输入 [b green]API_KEY[/b green] (ENTER 空): ', end='')
-        api_key = input()
-    elif model_family == 'openai':
-        model_name = choose_model(models['openai']['models'])
-        base_url = models['openai']['base_url']
-        api_key = input_param('API KEY')
-    elif model_family == 'glm':
-        model_name = choose_model(models['glm']['models'])
-        base_url = models['glm']['base_url']
-        api_key = input_param('API KEY')
-    elif model_family == 'qwen':
-        model_name = choose_model(models['qwen']['models'])
-        base_url = models['qwen']['base_url']
-        api_key = input_param('API KEY')
-    elif model_family == 'deepseek':
-        model_name = choose_model(models['deepseek']['models'])
-        base_url = models['deepseek']['base_url']
-        api_key = input_param('API KEY')
-    elif model_family == 'moonshot':
-        model_name = choose_model(models['moonshot']['models'])
-        base_url = models['moonshot']['base_url']
-        api_key = input_param('API KEY')
+        model_name = input_param('模型名')
+        base_url = input_param('BASE_URL')
+        api_key = input_param('API_KEY', True)
     elif model_family == 'doubao':
         rprint('[yellow]豆包大模型的模型选择由控制台的推理接入点控制[/yellow]')
-        model_name = choose_model(models['doubao']['models'])
-        base_url = models['doubao']['base_url']
-        api_key = input_param('API KEY')
+        base_url = input_param('BASE_URL', True)
+        api_key = input_param('API_KEY')
         endpoint_id = input_param('推理接入点 ID')
-        config[model_name]['endpoint_id'] = endpoint_id
+        new_config['endpoint_id'] = endpoint_id
     else:
-        raise ValueError('Unknown model family')
+        model_name = choose_model(models[model_family]['models'])
+        base_url = input_param('BASE_URL', True)
+        api_key = input_param('API_KEY')
 
-    rprint('请输入 [b green]temperature[/b green] (ENTER 默认): ', end='')
-    temperature = input_setting()
-    rprint('请输入 [b green]frequency penalty[/b green] (ENTER 默认): ', end='')
-    frequency_penalty = input_setting()
-    rprint('请输入 [b green]presence penalty[/b green] (ENTER 默认): ', end='')
-    presence_penalty = input_setting()
+    temperature = input_param('temperature', True)
+    frequency_penalty = input_param('frequency penalty', True)
+    presence_penalty = input_param('presence penalty', True)
 
-    config['default_model'] = model_name
-    if model_name not in config:
-        config[model_name] = {}
-    config[model_name]['base_url'] = base_url
-
-    if api_key != '':
-        config[model_name]['api_key'] = api_key
+    new_config['model_name'] = model_name
+    new_config['api_key'] = api_key
+    if base_url is None:
+        new_config['base_url'] = models[model_family]['base_url']
+    else:
+        new_config['base_url'] = base_url
     if temperature is not None:
-        config[model_name]['temperature'] = temperature
+        new_config['temperature'] = temperature
     if frequency_penalty is not None:
-        config[model_name]['frequency_penalty'] = frequency_penalty
+        new_config['frequency_penalty'] = frequency_penalty
     if presence_penalty is not None:
-        config[model_name]['presence_penalty'] = presence_penalty
+        new_config['presence_penalty'] = presence_penalty
 
     print()
-    print_config(model_name, config[model_name])
+    print_config(config_name, new_config)
 
     save = ''
     while save != 'y' and save != 'n':

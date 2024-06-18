@@ -7,7 +7,7 @@ def init_parse() -> argparse.Namespace:
 
     # 模型参数
     parser.add_argument('-s', '--stream', action='store_true', help='流式输出模式')
-    parser.add_argument('-m', '--model', nargs=1, metavar='<model name>', type=str, help='设置模型')
+    parser.add_argument('-m', '--model', nargs=1, metavar='<model name>', type=str, help='设置要使用的配置名')
     parser.add_argument('-t', '--template', nargs=1, metavar='<template name>', type=str, help='Prompt 模板')
     parser.add_argument('-f', '--file', nargs="*", metavar='<file path>', type=str, help='上传文件')
     parser.add_argument('-i', '--img', nargs="*", metavar='<img path>', type=str, help='上传图片文件')

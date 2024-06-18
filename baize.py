@@ -31,8 +31,9 @@ def get_llm(model_name: str, model_config: dict) -> BaseLLM:
         from llm.moonshot import Moonshot
         llm = Moonshot(model_name, model_config)
     else:
-        rprint(f'[red]不支持模型 {model_name}[/red]')
-        sys.exit()
+        # 自定义模型默认使用 OpenAI API
+        from llm.custom import CustomLLM
+        llm = CustomLLM(model_name, model_config)
 
     return llm
 
@@ -41,16 +42,17 @@ def config_model(args: Namespace):
     from utils.config import model_config
     config = model_config()
     if args.model:
-        set_model = args.model[0]
+        config_name = args.model[0]
     else:
-        if 'default_model' not in config.keys():
+        if 'default_config' not in config.keys():
             rprint('[red]请先运行 `baize --setup` 配置模型[/red]')
             sys.exit()
-        set_model = config['default_model']
-    if set_model not in list(config.keys()):
-        rprint(f'[red]未找到模型 {set_model}[/red]')
+        config_name = config['default_config']
+    model_name = config[config_name]['model_name']
+    if config_name not in list(config.keys()):
+        rprint(f'[red]未找到配置 {config_name}[/red]')
         sys.exit()
-    llm = get_llm(set_model, config[set_model])
+    llm = get_llm(model_name, config[config_name])
     return llm
 
 
@@ -64,8 +66,8 @@ def setting_args_parse(args: Namespace):
         print_model_list()
         sys.exit()
     elif args.set:
-        from utils.config import set_default_model
-        set_default_model(args.set[0])
+        from utils.config import set_default_config
+        set_default_config(args.set[0])
         sys.exit()
     elif args.list:
         from utils.templates import print_template_list
