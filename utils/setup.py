@@ -132,6 +132,7 @@ def setup():
         api_key = input_param('API_KEY')
         endpoint_id = input_param('推理接入点 ID')
         new_config['endpoint_id'] = endpoint_id
+        model_name = 'doubao'
     else:
         model_name = choose_model(models[model_family]['models'])
         base_url = input_param('BASE_URL', True)
