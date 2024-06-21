@@ -1,6 +1,6 @@
 import sys
 from llm.base_llm import BaseLLM
-from utils.render import print_markdown
+from utils.render import print_markdown, print_markdown_stream
 from rich import print as rprint
 from argparse import Namespace
 
@@ -194,10 +194,13 @@ def output_parse(args: Namespace, llm: BaseLLM, messages: list[dict]):
 
     if stream:
         response = llm.stream_message(messages)
-        for block in response:
-            buffer += block
-            sys.stdout.write(block)
-            sys.stdout.flush()
+        if args.markdown:
+            print_markdown_stream(response)
+        else:
+            for block in response:
+                buffer += block
+                sys.stdout.write(block)
+                sys.stdout.flush()
         sys.stdout.write('\n')
     else:
         response = llm.message(messages)

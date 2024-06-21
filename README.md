@@ -199,6 +199,9 @@ grep [options] pattern [file...]
 TODO
 
 ## Prompt 配置
+
+可以通过 `--createtemplate` 创建模板，但是需要注意，模板是通过 `{}` 进行格式化的，如果有正常文本中的 `{}`，请转义成 `{{}}`
+
 ### 设置上下文
 Context 是一个对用户进行描述的系统 Prompt，你可以在这里定义你的背景信息和希望得到的回答是什么，可以更好地与 LLM 对齐
 
@@ -238,7 +241,7 @@ cat book.txt | baize -t summary -o ~/obsidian/summary.md
 ```
 
 ### Markdown 输出
-baize 支持在 CLI 中渲染 Markdown，包含代码样式，你可以通过 `--markdown -M` 开启该功能，不支持流式输出的 Markdown 渲染
+baize 支持在 CLI 中渲染 Markdown，包含代码样式，你可以通过 `--markdown -M` 开启该功能，支持流式输出的 Markdown 渲染
 
 ```bash
 baize 请你给我一个C++的快排实现 -M
