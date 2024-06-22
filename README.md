@@ -1,5 +1,5 @@
 # 简介
-baize 是一个将 LLM 能力集成至 CLI 的工具框架，支持多种 LLM 模型和接口，并提供一系列 CLI 命令，让用户能够方便地使用 LLM 能力。
+baize 是一个将 LLM 能力集成至 Terminal 终端的工具框架，支持多种 LLM 模型和接口，并提供一系列终端命令，让用户能够方便地使用 LLM 能力。
 
 > 白泽（baize）是中国古代神话中的瑞兽。能言语，通万物之情，知鬼神之事。
 
@@ -13,26 +13,16 @@ baize 是一个将 LLM 能力集成至 CLI 的工具框架，支持多种 LLM �
 
 # 为什么需要 baize
 
-简而言之，在 CLI 中集成方便的 LLM 是一个刚需：
+简而言之，在终端中集成方便的 LLM 是一个刚需：
 
-- 在 CLI 的工作环境下，来回切换浏览器和 LLM 进行交互的效率低
+- 在终端的工作环境下，来回切换浏览器和 LLM 进行交互的效率低
 - 无法方便地将 LLM 的能力集成至 Shell 脚本中
 
 第一点意味着与 LLM 的交互效率提高，在日常工作中提高我们的工作效率；第二点则意味着，一些之前较复杂的任务可以基于 LLM 能力的脚本实现自动化，存在无限的想象力。除了这两点之外，baize 还提供了其他零碎场景的解决方案，等待大家自行探索！
 
-**如果你的工作和生活经常用到 CLI，那么 baize 就是你需要的！**
+**如果你的工作和生活经常用到终端，那么 baize 就是你需要的！**
 
 # 安装
-使用 baize 最方便的方法是在 [release](https://github.com/Syan-Lin/baize/releases) 中下载已编译的二进制程序，并将其安装到你的系统路径中。
-
-## 添加系统路径
-Windows: 在环境变量中添加你的程序所解压的地方，例如 `D:/baize`
-
-Linux: 在 `~/.bashrc` 中添加 `export PATH=<你的程序解压的地方>`，如果你用的是 zsh，则是在 `~/.zshrc` 中添加
-
-Mac: 在 `~/.bash_profile` 中添加 `export PATH=<你的程序解压的地方>`
-
-## 手动构建二进制程序
 
 1. 克隆本仓库
 
@@ -47,7 +37,7 @@ cd baize
 pip install -r requirements.txt
 ```
 
-> 请你确保你的 Python 版本 >= 3.12
+> 请你确保你的 Python 版本 >= 3.12，你可以通过 conda、venv 等工具来创建一个虚拟环境进行安装
 
 3. 构建二进制程序
 
@@ -113,7 +103,7 @@ baize 你好 8 -t example -s
 
 ### 管道连接
 
-管道连接是 CLI 里面一个重要的概念，通过支持管道连接，对于简单的工作流，我们可以非常快捷地接起来
+管道连接是终端里面一个重要的概念，通过支持管道连接，对于简单的工作流，我们可以非常快捷地接起来
 
 假设存在一个对文本进行总结的 Prompt 模板叫 `summary`，并且当前目录下存在一个叫 `book.txt` 的文本
 
@@ -124,7 +114,7 @@ cat book.txt | baize -t summary -s
 当然你也可以构建更复杂的流程，将总结再翻译成英文并保存下来
 
 ```bash
-cat book.txt | baize -t summary | baize -t trans2eng > eng.txt
+cat book.txt | baize -t summary | baize -t trans2eng -o eng.txt
 ```
 
 聪明的你一定一下就能想到如何将这个用法结合到自己的工作生活中，例如自动生成 commit message
@@ -132,6 +122,12 @@ cat book.txt | baize -t summary | baize -t trans2eng > eng.txt
 ```bash
 git add .
 git diff HEAD | baize -t commit
+```
+
+或者自动总结网页内容
+
+```bash
+curl https://www.example.com | baize -t summary -o webpage_summary.txt
 ```
 
 ### 多模态
@@ -162,10 +158,10 @@ baize 你好 -p --log
 ```
 
 ## 命令行模式
-在 CLI 中使用 LLM 的一大场景就是构造一个命令行命令，在传统的交互逻辑中，我们需要将 LLM 的输出从其他地方复制到 CLI 中，而 baize 则提供了一种更优雅的方式，即命令行模式。通过 `--cli -c` 打开，该参数下，模型会直接给出命令。如果你想要详细的命令解释，你可以使用 `--clidetail` 参数，该参数下，模型会给出详细的命令解释。
+在重点中使用 LLM 的一大场景就是构造一个命令行命令，在传统的交互逻辑中，我们需要将 LLM 的输出从其他地方复制到终端中，而 baize 则提供了一种更优雅的方式，即命令行模式。通过 `--cli -c` 打开，该参数下，模型会直接给出命令。如果你想要详细的命令解释，你可以使用 `--clidetail` 参数，该参数下，模型会给出详细的命令解释。
 
 ```bash
-baize -c 在main.py文件中找到字符串name，并打印出行号
+baize -c 在 main.py 文件中找到字符串 name，并打印出行号
 `grep -n 'name' main.py` 是否执行 [y/n]: y
 8:def get_llm(model_name: str, model_config: dict) -> BaseLLM:
 11:    if model_name in models['qwen']['models']:
@@ -177,7 +173,7 @@ baize -c 在main.py文件中找到字符串name，并打印出行号
 如果是在详细模式下，LLM 则会具体解释
 
 ```bash
-baize --clidetail 在main.py文件中找到字符串name，并打印出行号
+baize --clidetail 在 main.py 文件中找到字符串 name，并打印出行号
 # 命令行命令：grep
 ## 介绍
 `grep` 是一个强大的文本搜索工具，它使用正则表达式搜索包含指定模式的字符串，并显示匹配的行。
@@ -220,7 +216,7 @@ baize --resetcontext
 
 ## 更好的输入输出
 ### 从剪贴板获取输入
-在命令行中工作时，有时候直接复制粘贴大段的文本，会使 CLI 看起来很「脏」，这个时候可以使用 `--paste -P` 直接将剪贴板的内容作为输入
+在命令行中工作时，有时候直接复制粘贴大段的文本，会使终端看起来很「脏」，这个时候可以使用 `--paste -P` 直接将剪贴板的内容作为输入
 
 ```bash
 baize -P
@@ -230,7 +226,7 @@ baize -P
 在命令行中工作时，有时候需要复制 LLM 的输出，这个时候可以通过 `--copy -C` 直接将模型的输出复制到剪贴板中
 
 ```bash
-baize 请你给我一个C++的快排实现 -C
+baize 请你给我一个 C++ 的快排实现 -C
 ```
 
 ### 输出到文件
@@ -241,7 +237,7 @@ cat book.txt | baize -t summary -o ~/obsidian/summary.md
 ```
 
 ### Markdown 输出
-baize 支持在 CLI 中渲染 Markdown，包含代码样式，你可以通过 `--markdown -M` 开启该功能，支持流式输出的 Markdown 渲染
+baize 支持在终端中渲染 Markdown，包含代码样式，你可以通过 `--markdown -M` 开启该功能，支持流式输出的 Markdown 渲染
 
 ```bash
 baize 请你给我一个C++的快排实现 -M
