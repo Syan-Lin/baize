@@ -115,14 +115,15 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     # Prompt 输入
     if args.paste:
         import pyperclip
-        input_prompt = [pyperclip.paste()]
+        paste = [pyperclip.paste()]
         if args.prompt:
-            input_prompt = args.prompt + ['\n'] + input_prompt
+            input_prompt = args.prompt + ['\n'] + paste
     else:
+        sys_in = ''
+        if not sys.stdin.isatty():
+            sys_in = sys.stdin.read()
         if args.prompt:
-            input_prompt = args.prompt
-        else:
-            input_prompt = [sys.stdin.read()]
+            input_prompt = args.prompt + ['\n'] + [sys_in]
 
     messages = []
 
