@@ -15,7 +15,7 @@ def print_code(code: str, language: str):
     console.print(syntax)
 
 
-def print_markdown_stream(generator: Generator):
+def print_markdown_stream(generator: Generator) -> str:
     '''Markdown 打印时预留六行用 live 更新（直接 print 有可能丢失样式），剩余的使用 print 打印'''
     buffer_line = 6
     text = ''
@@ -55,3 +55,4 @@ def print_markdown_stream(generator: Generator):
         live.update(Text.from_ansi(rest))
 
     live.stop()
+    return text

@@ -199,7 +199,7 @@ def output_parse(args: Namespace, llm: BaseLLM, messages: list[dict]):
     if stream:
         response = llm.stream_message(messages)
         if args.markdown:
-            print_markdown_stream(response)
+            buffer = print_markdown_stream(response)
         else:
             for block in response:
                 buffer += block
