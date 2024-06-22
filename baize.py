@@ -113,18 +113,21 @@ def setting_args_parse(args: Namespace):
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     # Prompt 输入
+    input_prompt = []
     if args.paste:
         import pyperclip
         input_prompt = [pyperclip.paste()]
         if args.prompt:
             input_prompt = args.prompt + ['\n'] + input_prompt
     else:
-        input_prompt = ''
         if not sys.stdin.isatty():
-            input_prompt = sys.stdin.read()
+            input_prompt = [sys.stdin.read()]
         if args.prompt:
-            input_prompt = args.prompt + ['\n'] + [input_prompt]
+            input_prompt = args.prompt + ['\n'] + input_prompt
 
+    if len(input_prompt) == 0:
+        rprint('[red]未输入任何内容！[/red]')
+        sys.exit()
     messages = []
 
     # 历史对话引入
