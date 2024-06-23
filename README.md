@@ -1,3 +1,10 @@
+
+<p align="center">
+  <a href="https://github.com/Syan-Lin/baize/stargazers"><img src="https://img.shields.io/github/stars/Syan-Lin/baize?color=green&amp;logo=github&amp;style=for-the-badge" alt="Github stars"></a>
+  <img src="https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=Python&logoColor=white&color=green" alt="Python">
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/Syan-Lin/baize?&amp;color=green&amp;style=for-the-badge" alt="License"></a>
+</p>
+
 # 简介
 baize 是一个将 LLM 能力集成至 Terminal 终端的工具框架，支持多种 LLM 模型和接口，并提供一系列终端命令，让用户能够方便地使用 LLM 能力。
 
