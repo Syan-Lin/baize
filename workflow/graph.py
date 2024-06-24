@@ -11,10 +11,7 @@ from workflow.node import (
 )
 
 
-def init_graph(workflow_config_path: str, debug: bool):
-    with open(workflow_config_path, 'r', encoding='utf-8') as f:
-        workflow_config = json.load(f)
-
+def init_graph(workflow_config: dict, debug: bool):
     graph = Graph()
     nodes = {}
     for name, config in workflow_config.items():

@@ -18,6 +18,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--version', action='store_true', help='查看版本')
     parser.add_argument('--setup', action='store_true', help='配置新模型')
     parser.add_argument('--modellist', action='store_true', help='查看现有模型列表')
+    parser.add_argument('--workflowlist', action='store_true', help='查看现有 Workflow 列表')
     parser.add_argument('-l', '--list', action='store_true', help='查看现有 Prompt 模板列表')
     parser.add_argument('--context', action='store_true', help='查看 Context Prompt')
     parser.add_argument('--resetcontext', action='store_true', help='删除 Context Prompt')
@@ -27,6 +28,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--log', action='store_true', help='调试模式')
     parser.add_argument('-c', '--cli', action='store_true', help='命令行模式')
     parser.add_argument('--clidetail', action='store_true', help='命令行详细模式')
+    parser.add_argument('-w', '--workflow', nargs=1, metavar='<workflow name>', help='执行 Workflow')
 
     # 输入输出
     parser.add_argument('-C', '--copy', action='store_true', help='输出复制到剪贴板')

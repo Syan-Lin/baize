@@ -65,6 +65,10 @@ def setting_args_parse(args: Namespace):
         from utils.config import print_model_list
         print_model_list()
         sys.exit()
+    elif args.workflowlist:
+        from workflow.workflow import print_workflow_table
+        print_workflow_table()
+        sys.exit()
     elif args.set:
         from utils.config import set_default_config
         set_default_config(args.set[0])
@@ -240,6 +244,10 @@ def main() -> None:
         # 命令行模式
         from cli.cli import cli_main
         cli_main(args, llm)
+    elif args.workflow:
+        # 工作流模式
+        from workflow.workflow import workflow_main
+        workflow_main(args)
     else:
         # 输入参数
         messages = input_args_parse(args, llm)
