@@ -104,7 +104,7 @@ baize 你好 -s
 通过 `--template -t` 参数，可以对 Prompt 模板进行格式化，从而很方便地调用各种模板
 
 ```bash
-baize 你好 8 -t example -s
+baize 你好 8 -t example
 ```
 
 你可以通过 `baize --list` 查看当前可用的模板。
@@ -116,7 +116,7 @@ baize 你好 8 -t example -s
 假设存在一个对文本进行总结的 Prompt 模板叫 `summary`，并且当前目录下存在一个叫 `book.txt` 的文本
 
 ```bash
-cat book.txt | baize -t summary -s
+cat book.txt | baize -t summary
 ```
 
 当然你也可以构建更复杂的流程，将总结再翻译成英文并保存下来
@@ -170,12 +170,7 @@ baize 你好 -p --log
 
 ```bash
 baize -c 在 main.py 文件中找到字符串 name，并打印出行号
-`grep -n 'name' main.py` 是否执行 [y/n]: y
-8:def get_llm(model_name: str, model_config: dict) -> BaseLLM:
-11:    if model_name in models['qwen']['models']:
-13:        llm = Qwen(model_name, model_config)
-14:    elif model_name in models['glm']['models']:
-211:if __name__ == '__main__':
+`grep -n 'name' main.py` 是否执行 [y/n]:
 ```
 
 如果是在详细模式下，LLM 则会具体解释
