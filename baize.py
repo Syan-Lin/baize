@@ -70,8 +70,8 @@ def setting_args_parse(args: Namespace):
         set_default_config(args.set[0])
         sys.exit()
     elif args.list:
-        from utils.templates import print_template_list
-        print_template_list()
+        from utils.templates import print_template_table
+        print_template_table()
         sys.exit()
     elif args.context:
         from utils.context import load_context

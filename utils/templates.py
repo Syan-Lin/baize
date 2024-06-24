@@ -64,9 +64,10 @@ def get_template_list() -> list[dict]:
     return template_list
 
 
-def print_template_table(template_list: list):
+def print_template_table():
     from rich.table import Table
     from rich.console import Console
+    template_list = get_template_list()
 
     table = Table(show_header=True, header_style="bold green")
     console = Console()
@@ -79,11 +80,6 @@ def print_template_table(template_list: list):
     for template in template_list:
         table.add_row(template['name'], template['describe'], template['author'], template['date'])
     console.print(table)
-
-
-def print_template_list():
-    template_list = get_template_list()
-    print_template_table(template_list)
 
 
 def create_template():
