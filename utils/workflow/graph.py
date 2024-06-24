@@ -1,7 +1,7 @@
 import sys
 import json
 from rich import print as rprint
-from workflow.node import (
+from utils.workflow.node import (
     Node,
     OutputNode,
     make_input_node,

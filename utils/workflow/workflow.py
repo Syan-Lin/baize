@@ -1,7 +1,7 @@
 import os
 import json
 from argparse import Namespace
-from workflow.graph import init_graph
+from utils.workflow.graph import init_graph
 
 
 def get_workflow_path() -> str:

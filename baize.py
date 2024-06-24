@@ -66,7 +66,7 @@ def setting_args_parse(args: Namespace):
         print_model_list()
         sys.exit()
     elif args.workflowlist:
-        from workflow.workflow import print_workflow_table
+        from utils.workflow.workflow import print_workflow_table
         print_workflow_table()
         sys.exit()
     elif args.set:
@@ -242,11 +242,11 @@ def main() -> None:
 
     if args.cli or args.clidetail:
         # 命令行模式
-        from cli.cli import cli_main
+        from utils.cli.cli import cli_main
         cli_main(args, llm)
     elif args.workflow:
         # 工作流模式
-        from workflow.workflow import workflow_main
+        from utils.workflow.workflow import workflow_main
         workflow_main(args)
     else:
         # 输入参数
