@@ -36,7 +36,7 @@ def get_template(template_name: str) -> str:
         return f.read()
 
 
-def get_list() -> list[dict]:
+def get_template_list() -> list[dict]:
     template_root_path = get_template_path()
 
     template_list = []
@@ -82,7 +82,7 @@ def print_template_table(template_list: list):
 
 
 def print_template_list():
-    template_list = get_list()
+    template_list = get_template_list()
     print_template_table(template_list)
 
 
@@ -139,7 +139,7 @@ def create_template():
 
 
 def delete_template(delete_templates: list[str]):
-    template_list = get_list()
+    template_list = get_template_list()
 
     def in_list(template: str) -> bool:
         for template_meta in template_list:
