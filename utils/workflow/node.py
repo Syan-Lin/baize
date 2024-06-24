@@ -58,7 +58,8 @@ class InputNode(Node):
                     rprint(f'节点 [red]{self.name}[/red] 中，命令 [green]`{self.command}`[/green] 执行错误:\n {result.stderr}')
                     sys.exit()
             else:
-                raise ValueError(f'节点 {self.name}，输入参数 {param_name} 格式错误')
+                rprint(f'请输入参数[green] {param_name} [/green]: ')
+                param[param_name] = input()
 
         self.debug_output(param)
         return param
