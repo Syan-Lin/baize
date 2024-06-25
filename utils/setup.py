@@ -141,6 +141,7 @@ def setup():
     temperature = input_param('temperature', True)
     frequency_penalty = input_param('frequency penalty', True)
     presence_penalty = input_param('presence penalty', True)
+    top_p = input_param('top_p', True)
 
     new_config['model_name'] = model_name
     new_config['api_key'] = api_key
@@ -148,12 +149,15 @@ def setup():
         new_config['base_url'] = models[model_family]['base_url']
     else:
         new_config['base_url'] = base_url
+
     if temperature is not None:
         new_config['temperature'] = float(temperature)
     if frequency_penalty is not None:
         new_config['frequency_penalty'] = float(frequency_penalty)
     if presence_penalty is not None:
         new_config['presence_penalty'] = float(presence_penalty)
+    if top_p is not None:
+        new_config['top_p'] = float(top_p)
 
     print()
     print_config(config_name, new_config)
