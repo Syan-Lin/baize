@@ -149,11 +149,11 @@ def setup():
     else:
         new_config['base_url'] = base_url
     if temperature is not None:
-        new_config['temperature'] = temperature
+        new_config['temperature'] = float(temperature)
     if frequency_penalty is not None:
-        new_config['frequency_penalty'] = frequency_penalty
+        new_config['frequency_penalty'] = float(frequency_penalty)
     if presence_penalty is not None:
-        new_config['presence_penalty'] = presence_penalty
+        new_config['presence_penalty'] = float(presence_penalty)
 
     print()
     print_config(config_name, new_config)
@@ -161,6 +161,33 @@ def setup():
     save = ''
     while save != 'y' and save != 'n':
         save = input('保存配置 [y/n]: ')
+
+    if save == 'y':
+        from utils.config import save_model_config
+        save_model_config(config)
+
+
+def delete_model(models: list):
+    from utils.config import model_config
+    config = model_config()
+
+    model_delete = []
+    for model in models:
+        if model not in config:
+            continue
+        config.pop(model)
+        model_delete.append(model)
+
+    if len(model_delete) == 0:
+        rprint('[red]没有可删除的模型[/red]')
+        return
+    rprint('[red]删除模型：[/red]')
+    for model in model_delete:
+        rprint(f'[red]{model}[/red]')
+
+    save = ''
+    while save != 'y' and save != 'n':
+        save = input('确认删除 [y/n]: ')
 
     if save == 'y':
         from utils.config import save_model_config
