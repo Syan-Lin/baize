@@ -18,6 +18,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--version', action='store_true', help='查看版本')
     parser.add_argument('--setup', action='store_true', help='配置新模型')
     parser.add_argument('--modellist', action='store_true', help='查看现有模型列表')
+    parser.add_argument('--deletemodel', nargs="*", metavar='<model name>', type=str, help='删除已配置模型')
     parser.add_argument('--workflowlist', action='store_true', help='查看现有 Workflow 列表')
     parser.add_argument('-l', '--list', action='store_true', help='查看现有 Prompt 模板列表')
     parser.add_argument('--context', action='store_true', help='查看 Context Prompt')
