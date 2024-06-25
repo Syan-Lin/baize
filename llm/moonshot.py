@@ -23,7 +23,7 @@ class Moonshot(BaseLLM):
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=message,
-            temperature=self.model_config.get("temp"),
+            temperature=self.model_config.get("temperature"),
             top_p=self.model_config.get("top_p"),
             frequency_penalty=self.model_config.get("frequency_penalty"),
             presence_penalty=self.model_config.get("presence_penalty"),
@@ -35,7 +35,7 @@ class Moonshot(BaseLLM):
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=message,
-            temperature=self.model_config.get("temp"),
+            temperature=self.model_config.get("temperature"),
             top_p=self.model_config.get("top_p"),
             frequency_penalty=self.model_config.get("frequency_penalty"),
             presence_penalty=self.model_config.get("presence_penalty"),
