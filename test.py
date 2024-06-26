@@ -265,6 +265,18 @@ def test_cli_mode():
     check(chat, 'clidetail + stream')
 
 
+def test_workflow():
+    console.print(Markdown('# Workflow Test'))
+
+    # workflow
+    chat = pexpect.spawn(f'{python_path} {baize_path} -w test')
+    check(chat, 'workflow')
+
+    # workflow + log
+    chat = pexpect.spawn(f'{python_path} {baize_path} -w test --log')
+    check(chat, 'workflow + log')
+
+
 if __name__ == "__main__":
     # 测试需要保证已经配置过一个名叫 test 的模型
     # 测试会使用 test 模型进行测试
@@ -279,3 +291,4 @@ if __name__ == "__main__":
     test_input()
     test_output()
     test_cli_mode()
+    test_workflow()
