@@ -74,8 +74,8 @@ def setting_args_parse(args: Namespace):
         set_default_config(args.set[0])
         sys.exit()
     elif args.list:
-        from utils.templates import print_template_table
-        print_template_table()
+        from utils.resource import print_resource_table
+        print_resource_table('templates')
         sys.exit()
     elif args.context:
         from utils.context import load_context
@@ -102,8 +102,8 @@ def setting_args_parse(args: Namespace):
         delete_template(args.deletetemplate)
         sys.exit()
     elif args.showtemplate:
-        from utils.templates import get_template
-        template = get_template(args.showtemplate[0])
+        from utils.resource import get_resource
+        template = get_resource('templates', args.showtemplate[0])
         print_markdown(template)
         sys.exit()
     elif args.init:
@@ -126,12 +126,12 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
         import pyperclip
         input_prompt = [pyperclip.paste()]
         if args.prompt:
-            input_prompt = args.prompt + ['\n'] + input_prompt
+            input_prompt = args.prompt + input_prompt
     else:
         if not sys.stdin.isatty():
             input_prompt = [sys.stdin.read()]
         if args.prompt:
-            input_prompt = args.prompt + ['\n'] + input_prompt
+            input_prompt = args.prompt + input_prompt
 
     if len(input_prompt) == 0:
         rprint('[red]未输入任何内容！[/red]')
@@ -154,8 +154,8 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     # 构造模板
     template = None
     if args.template:
-        from utils.templates import get_template
-        template = get_template(args.template[0])
+        from utils.resource import get_resource
+        template = get_resource('templates', args.template[0])
 
     from utils.templates import expand_prompt
     if template is None:

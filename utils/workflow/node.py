@@ -122,8 +122,8 @@ class LLMNode(Node):
 
         prompt = ''
         if self.template != '':
-            from utils.templates import get_template
-            prompt += get_template(self.template) + '\n'
+            from utils.resource import get_resource
+            prompt += get_resource('templates', self.template) + '\n'
         if self.content != '':
             prompt += self.content
         if prompt == '':

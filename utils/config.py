@@ -33,7 +33,7 @@ def set_default_config(model_name: str):
         raise ValueError(f'模型 {model_name} 未注册，无法设置为默认模型！')
     config['default_config'] = model_name
     save_model_config(config)
-    rprint(f'[bold green]已将模型 {model_name} 设置为默认模型。[/bold green]')
+    rprint(f'[bold green]已将模型 {model_name} 设置为默认模型[/bold green]')
 
 
 def save_model_config(config: dict):
