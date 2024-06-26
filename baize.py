@@ -45,12 +45,12 @@ def config_model(args: Namespace):
         config_name = args.model[0]
     else:
         if 'default_config' not in config.keys():
-            rprint('[red]请先运行 `baize --setup` 配置模型[/red]')
+            rprint('[red]错误: 请先运行 `baize --setup` 配置模型[/red]')
             sys.exit()
         config_name = config['default_config']
     model_name = config[config_name]['model_name']
     if config_name not in list(config.keys()):
-        rprint(f'[red]未找到配置 {config_name}[/red]')
+        rprint(f'[red]错误: 未找到配置 {config_name}[/red]')
         sys.exit()
     llm = get_llm(model_name, config[config_name])
     return llm
@@ -134,7 +134,7 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
             input_prompt = args.prompt + input_prompt
 
     if len(input_prompt) == 0:
-        rprint('[red]未输入任何内容！[/red]')
+        rprint('[red]错误: 未输入任何内容！[/red]')
         sys.exit()
     messages = []
 
@@ -166,7 +166,7 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
         else:
             format_num = template.count('{}')
             if len(input_prompt) != format_num:
-                rprint(f'[red]输入参数数量与模板不一致， Prompt 模板中有 [green]{format_num}[/green] 个参数，而给了 [green]{len(input_prompt)}[/green] 个参数[/red]')
+                rprint(f'[red]错误: 输入参数数量与模板不一致， Prompt 模板中有 [green]{format_num}[/green] 个参数，而给了 [green]{len(input_prompt)}[/green] 个参数[/red]')
                 sys.exit()
             template_format = template.format(*input_prompt)
         user_message = {'role': 'user', 'content': template_format}
@@ -177,14 +177,14 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
             file_message = llm.upload_file(args.file, user_message)
             messages += file_message
         except NotImplementedError:
-            rprint(f'[red]模型 {llm.model_name} 不支持文件上传[/red]')
+            rprint(f'[red]错误: 模型 {llm.model_name} 不支持文件上传[/red]')
             sys.exit()
     if args.img:
         try:
             img_message = llm.upload_img(args.img, user_message)
             messages += img_message
         except NotImplementedError:
-            rprint(f'[red]模型 {llm.model_name} 不支持图片上传[/red]')
+            rprint(f'[red]错误: 模型 {llm.model_name} 不支持图片上传[/red]')
             sys.exit()
 
     if not args.file and not args.img:

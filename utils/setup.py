@@ -9,7 +9,7 @@ def append_path(bash_file: str):
     file_path = os.path.expanduser(f'~/{bash_file}')
 
     if not os.path.exists(file_path):
-        rprint(f'文件不存在: {file_path}')
+        rprint(f'[red]错误: 文件不存在: {file_path}[/red]')
         return
 
     root = os.path.expanduser('~')
@@ -183,7 +183,7 @@ def delete_model(models: list):
         model_delete.append(model)
 
     if len(model_delete) == 0:
-        rprint('[red]没有可删除的模型[/red]')
+        rprint('[red]错误: 没有可删除的模型[/red]')
         return
     rprint('[red]删除模型：[/red]')
     for model in model_delete:

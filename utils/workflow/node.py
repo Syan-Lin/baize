@@ -55,7 +55,7 @@ class InputNode(Node):
                 if result.stdout:
                     param[param_name] = result.stdout
                 if result.stderr:
-                    rprint(f'节点 [red]{self.name}[/red] 中，命令 [green]`{self.command}`[/green] 执行错误:\n {result.stderr}')
+                    rprint(f'[red]错误: 节点 {self.name} 中，命令 [/red][green]`{self.command}`[/green] [red]执行错误:\n {result.stderr}[/red]')
                     sys.exit()
             else:
                 rprint(f'请输入参数[green] {param_name} [/green]: ')
@@ -67,7 +67,7 @@ class InputNode(Node):
 
 def make_llm_node(name: str, config: dict) -> Node:
     if 'model' not in config:
-        rprint(f'节点 [red]{name}[/red] 缺少 model 参数！')
+        rprint(f'[red]错误: 节点 {name} 缺少 model 参数！[/red]')
         sys.exit()
     model = config['model']
 
@@ -77,11 +77,11 @@ def make_llm_node(name: str, config: dict) -> Node:
     if 'content' in config:
         content = config['content']
     if template == '' and content == '':
-        rprint(f'节点 {name} 至少需要 template 或 content 参数')
+        rprint(f'[red]错误: 节点 {name} 至少需要 template 或 content 参数[/red]')
         sys.exit()
 
     if 'output' not in config:
-        rprint(f'节点 [red]{name}[/red] 缺少 output 参数！')
+        rprint(f'[red]错误: 节点 {name} 缺少 output 参数！[/red]')
         sys.exit()
 
     output = config['output']
@@ -160,7 +160,7 @@ class LLMNode(Node):
 
 def make_output_node(name: str, config: dict) -> Node:
     if 'to' not in config:
-        rprint(f'节点 [red]{name}[/red] 缺少 to 参数！')
+        rprint(f'[red]错误: 节点 {name} 缺少 to 参数！[/red]')
         sys.exit()
     to = config['to']
 
@@ -203,12 +203,12 @@ class OutputNode(Node):
 
 def make_script_node(name: str, config: dict) -> Node:
     if 'script' not in config:
-        rprint(f'节点 [red]{name}[/red] 缺少 script 路径参数！')
+        rprint(f'[red]错误: 节点 {name} 缺少 script 路径参数！[/red]')
         sys.exit()
     script_path = config['script']
 
     if 'function' not in config:
-        rprint(f'节点 [red]{name}[/red] 缺少 function 参数！')
+        rprint(f'[red]错误: 节点 {name} 缺少 function 参数！[/red]')
         sys.exit()
     function = config['function']
 

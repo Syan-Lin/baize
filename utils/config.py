@@ -33,7 +33,7 @@ def set_default_config(model_name: str):
         raise ValueError(f'模型 {model_name} 未注册，无法设置为默认模型！')
     config['default_config'] = model_name
     save_model_config(config)
-    rprint(f'[bold green]已将模型 {model_name} 设置为默认模型[/bold green]')
+    rprint(f'[green]已将模型 {model_name} 设置为默认模型[/green]')
 
 
 def save_model_config(config: dict):
@@ -48,7 +48,7 @@ def print_model_list():
     models = model_config()
 
     if len(models) == 0:
-        rprint('[red]无模型可用，请执行[/red] [green]`baize --setup`[/green] [red]进行初始化[/red]')
+        rprint('[red]错误: 无模型可用，请执行[/red] [green]`baize --setup`[/green] [red]进行初始化[/red]')
         return
 
     used_model = models['default_config']

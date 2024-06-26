@@ -24,7 +24,7 @@ def init_graph(workflow_config: dict, debug: bool):
         elif config['type'] == 'output':
             node = make_output_node(name, config)
         else:
-            rprint(f'节点 [red]{name}[/red] 类型错误，不存在类型 {config['type']}')
+            rprint(f'[red]错误: 节点 {name} 类型错误，不存在类型 {config['type']}[/red]')
             sys.exit()
         if debug:
             node.enable_debug()
@@ -36,7 +36,7 @@ def init_graph(workflow_config: dict, debug: bool):
             continue
         for input_node in config['input']:
             if input_node not in nodes:
-                rprint(f'节点 [red]{name}[/red] 的输入节点 [red]{input_node}[/red] 不存在！')
+                rprint(f'[red]错误: 节点 {name} 的输入节点 [red]{input_node}[/red] 不存在！[/red]')
                 sys.exit()
             nodes[name].add_input(nodes[input_node])
 
@@ -53,11 +53,11 @@ class Graph:
 
     def add_node(self, node: Node):
         if node in self.nodes:
-            rprint(f'节点 [red]{node.name}[/red] 已经存在！')
+            rprint(f'[red]错误: 节点 {node.name} 已经存在！[/red]')
             sys.exit()
         if isinstance(node, OutputNode):
             if self.output_node is not None:
-               rprint(f'只能存在一个输出节点，节点 [red]{node.name}[/red] 产生重复！')
+               rprint(f'[red]错误: 只能存在一个输出节点，节点 {node.name} 产生重复！[/red]')
                sys.exit()
             self.output_node = node
 
@@ -87,12 +87,12 @@ class Graph:
                 dfs(node)
 
         if loop_node is not None:
-            rprint(f'Workflow 存在环，出现在节点 [red]{loop_node.name}[/red]')
+            rprint(f'[red]错误: Workflow 存在环，出现在节点 {loop_node.name}[/red]')
             sys.exit()
 
 
     def run(self):
         if self.output_node is None:
-            rprint('[red]Workflow 没有输出节点[/red]')
+            rprint('[red]错误: Workflow 没有输出节点[/red]')
             sys.exit()
         return self.output_node.output()

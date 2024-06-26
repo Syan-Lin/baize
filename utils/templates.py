@@ -49,7 +49,7 @@ def create_template():
         template_root_path = get_resource_path('templates')
         new_template_path = os.path.join(template_root_path, template_name)
         if os.path.exists(new_template_path):
-            rprint('[red]模板已存在，无法创建！[/red]')
+            rprint('[red]错误: 模板已存在，无法创建！[/red]')
             return
         os.makedirs(new_template_path)
         with open(os.path.join(new_template_path, 'meta.json'), 'w', encoding='utf-8') as f:
