@@ -68,5 +68,6 @@ if __name__ == "__main__":
     copy_config_files(base_dir)
     copy_resource_files(base_dir, ResourceType.templates)
     copy_resource_files(base_dir, ResourceType.workflow)
+    copy_resource_files(base_dir, ResourceType.tool)
 
     rprint(f'程序已被安装至 [green]`{base_dir}`[/green]，请手动将程序添加至环境变量中')

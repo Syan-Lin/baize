@@ -69,6 +69,9 @@ def setting_args_parse(args: Namespace):
     elif args.workflowlist:
         print_resource_table(ResourceType.workflow)
         sys.exit()
+    elif args.toollist:
+        print_resource_table(ResourceType.tool)
+        sys.exit()
     elif args.set:
         from utils.config import set_default_config
         set_default_config(args.set[0])
