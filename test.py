@@ -1,6 +1,7 @@
 import os
 import sys
 import pexpect
+import pyperclip
 import argparse
 from rich import print as rprint
 from rich.markdown import Markdown
@@ -103,6 +104,7 @@ def test_settings():
     check(chat, 'resetcontext2')
 
     # createtemplate
+    pyperclip.copy('你好')
     chat = pexpect.spawn(f'{python_path} {baize_path} --createtemplate')
     chat.expect('.')
     chat.sendline()
@@ -159,7 +161,6 @@ def test_input():
     check(chat, '多段 prompt')
 
     # paste
-    import pyperclip
     pyperclip.copy('你好')
     chat = pexpect.spawn(f'{python_path} {baize_path} -P')
     check(chat, 'paste')
@@ -224,7 +225,6 @@ def test_output():
     check(chat, 'stream + markdown')
 
     # copy
-    import pyperclip
     pyperclip.copy('')
     chat = pexpect.spawn(f'{python_path} {baize_path} 你好 -C')
     check(chat, 'copy')
