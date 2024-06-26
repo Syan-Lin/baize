@@ -5,6 +5,7 @@ import json
 class ResourceType:
     templates = 'templates'
     workflow = 'workflow'
+    tool = 'tool'
 
 
 def get_resource_path(resource: str) -> str:
@@ -24,10 +25,12 @@ def get_resource(resource: str, name: str) -> str:
     if not os.path.exists(resource_path):
         raise FileNotFoundError(f'资源 {resource_path} 不存在！')
 
-    if resource == 'templates':
+    if resource == ResourceType.templates:
         file = 'prompt.md'
-    elif resource == 'workflow':
+    elif resource == ResourceType.workflow:
         file = 'workflow.json'
+    elif resource == ResourceType.tool:
+        file = 'tool.json'
     else:
         raise ValueError(f'未知资源: {resource}')
 

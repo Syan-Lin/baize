@@ -73,3 +73,7 @@ class GPT(BaseLLM):
                 }
             })
         return [img_message]
+
+
+    def call_tool(self, tools: dict, message: list[dict]) -> tuple[str, str, dict, dict]:
+        return super().call_tool(tools, message)

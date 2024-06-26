@@ -71,3 +71,20 @@ class GLM(BaseLLM):
                 }
             })
         return [img_message]
+
+
+    def call_tool(self, tools: dict, message: list[dict]) -> tuple[str, str, dict, dict]:
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=message,
+            temperature=self.model_config.get("temperature"),
+            top_p=self.model_config.get("top_p"),
+            tools=tools,
+        )
+        response_message = response.choices[0].message.content
+        function_name, args, tool_message = None, None, None
+        if response_message is None or response_message == '':
+            function_name = response.choices[0].message.tool_calls[0].function.name
+            args = response.choices[0].message.tool_calls[0].function.arguments
+            tool_message = response.choices[0].message.model_dump()
+        return response_message, function_name, args, tool_message

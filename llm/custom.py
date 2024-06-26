@@ -49,3 +49,7 @@ class CustomLLM(BaseLLM):
 
     def upload_img(self, img_path: list | str, message: dict) -> dict:
         return super().upload_img(img_path, message)
+
+
+    def call_tool(self, tools: dict, message: list[dict]) -> tuple[str, str, dict, dict]:
+        return super().call_tool(tools, message)

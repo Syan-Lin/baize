@@ -254,7 +254,7 @@ class ScriptNode(Node):
             with open(self.script_path, 'r', encoding='utf-8') as f:
                 custom_code = f.read()
         except Exception as e:
-            raise ValueError(f'读取脚本文件 {self.script_path} 失败')
+            raise ValueError(f'读取脚本文件 {self.script_path} 失败: {e}')
 
         input_params = {}
         for inp in self.input:

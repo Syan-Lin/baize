@@ -249,6 +249,10 @@ def main() -> None:
         # 工作流模式
         from utils.workflow.workflow import workflow_main
         workflow_main(args)
+    elif args.tool:
+        # 工具模式
+        from utils.tool.tool import tool_main
+        tool_main(args, llm)
     else:
         # 输入参数
         messages = input_args_parse(args, llm)

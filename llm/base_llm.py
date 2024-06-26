@@ -40,3 +40,8 @@ class BaseLLM(ABC):
     @abstractmethod
     def upload_img(self, img_path: list | str, message: dict) -> list[dict]:
         raise NotImplementedError(f'{self.model_name} 不支持图片上传')
+
+
+    @abstractmethod
+    def call_tool(self, tools: dict, message: list[dict]) -> tuple[str, str, dict, dict]:
+        raise NotImplementedError(f'{self.model_name} 不支持 function call')
