@@ -286,6 +286,9 @@ if __name__ == "__main__":
     if args.debug:
         debug = True
 
+    print(f'python_path: {python_path}')
+    print(f'baize_path:  {baize_path}')
+
     test_settings()
     chat = pexpect.spawn(f'{python_path} {baize_path} --set test')
     test_input()
