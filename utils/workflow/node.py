@@ -212,7 +212,7 @@ def make_script_node(name: str, config: dict) -> Node:
         sys.exit()
     function = config['function']
 
-    python_path = sys.executable
+    python_path = 'python'
     if 'python' in config:
         python_path = config['python']
 
@@ -238,7 +238,10 @@ class ScriptNode(Node):
             output_param = [output_param]
         self.output_param = output_param
         self.python_path = python_path
-        self.script_path = script_path
+        if '~' in script_path:
+            self.script_path = os.path.expanduser(script_path)
+        else:
+            self.script_path = script_path
         self.function = function
 
 
@@ -258,7 +261,7 @@ class ScriptNode(Node):
             input_params.update(inp.output())
         params = ''
         for param, value in input_params.items():
-            params += f'{param}="{value}",'
+            params += f'{param}="""{value}""",'
         params = params.rstrip(',')
 
         exec_code = CODE_TEMPLATE.format(custom_code=custom_code, function=self.function, params=params)
@@ -272,6 +275,7 @@ class ScriptNode(Node):
         script = self.generate_code()
 
         if self.debug:
+            rprint(f'节点 [green]{self.name}[/green] python_path: {self.python_path}')
             rprint(f'节点 [green]{self.name}[/green] 执行脚本:\n[yellow]{script}[/yellow]')
 
         result = subprocess.run([self.python_path, "-c", script], capture_output=True, text=True)
