@@ -21,19 +21,19 @@ def copy_config_files(base_dir: str):
     shutil.copy(model_config, base_dir)
 
 
-def copy_template_files(base_dir: str):
-    template_dir = os.path.join(base_dir, ResourceType.templates)
-    if not os.path.exists(template_dir):
-        os.makedirs(template_dir)
+def copy_resource_files(base_dir: str, resource_type: str):
+    resource_dir = os.path.join(base_dir, resource_type)
+    if not os.path.exists(resource_dir):
+        os.makedirs(resource_dir)
     else:
-        shutil.rmtree(template_dir)
-        os.makedirs(template_dir)
+        shutil.rmtree(resource_dir)
+        os.makedirs(resource_dir)
 
-    source_dir = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), ResourceType.templates)
+    source_dir = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), resource_type)
     for item in os.listdir(source_dir):
         item_path = os.path.join(source_dir, item)
         if os.path.isdir(item_path):
-            shutil.copytree(item_path, os.path.join(template_dir, item))
+            shutil.copytree(item_path, os.path.join(resource_dir, item))
 
 
 if __name__ == "__main__":
@@ -66,6 +66,7 @@ if __name__ == "__main__":
     os.remove(os.path.join(script_dir, 'baize.spec'))
 
     copy_config_files(base_dir)
-    copy_template_files(base_dir)
+    copy_resource_files(base_dir, ResourceType.templates)
+    copy_resource_files(base_dir, ResourceType.workflow)
 
     rprint(f'程序已被安装至 [green]`{base_dir}`[/green]，请手动将程序添加至环境变量中')

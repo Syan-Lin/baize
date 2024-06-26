@@ -1,0 +1,41 @@
+{
+    "input_node": {
+        "type": "input",
+        "output": {
+            "name": {
+                "content": "小明"
+            },
+            "age": {
+                "command": "echo 18"
+            },
+            "request": {}
+        }
+    },
+    "llm_node": {
+        "type": "llm",
+        "content": "你好, 我是 {}, 今年 {} 岁, 我的需求是 {}",
+        "model": "test",
+        "input": [
+            "input_node"
+        ],
+        "output": "output"
+    },
+    "script_node": {
+        "type": "script",
+        "script": "~/baize/workflow/test/script.py",
+        "function": "reverse",
+        "input": [
+            "llm_node"
+        ],
+        "output": [
+            "output"
+        ]
+    },
+    "output_node": {
+        "type": "output",
+        "to": "console",
+        "input": [
+            "script_node"
+        ]
+    }
+}
