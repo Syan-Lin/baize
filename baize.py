@@ -49,10 +49,10 @@ def config_model(args: Namespace):
             rprint('[red]错误: 请先运行 `baize --setup` 配置模型[/red]')
             sys.exit()
         config_name = config['default_config']
-    model_name = config[config_name]['model_name']
     if config_name not in list(config.keys()):
         rprint(f'[red]错误: 未找到配置 {config_name}[/red]')
         sys.exit()
+    model_name = config[config_name]['model_name']
     llm = get_llm(model_name, config[config_name])
     return llm
 
