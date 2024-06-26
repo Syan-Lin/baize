@@ -4,7 +4,7 @@ from rich import print as rprint
 from argparse import Namespace
 from llm.base_llm import BaseLLM
 from utils.render import print_markdown
-from utils.resource import get_resource
+from utils.resource import get_resource, ResourceType
 from utils.context import print_messages
 
 
@@ -13,6 +13,7 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
     if not args.prompt and not args.paste:
         rprint('[red]错误：没有 Prpmpt 输入[/red]')
         sys.exit(1)
+    input_prompt = []
     if args.paste:
         import pyperclip
         input_prompt = [pyperclip.paste()]
@@ -21,7 +22,7 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
 
     from utils.templates import expand_prompt
     messages = []
-    template = get_resource('template', 'cli_mode')
+    template = get_resource(ResourceType.templates, 'cli_mode')
     template_format = template + '\n' + expand_prompt(input_prompt)
     user_message = {'role': 'user', 'content': template_format}
     messages.append(user_message)
@@ -34,7 +35,7 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
 
 def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
     messages = []
-    template = get_resource('template', 'cli_explain')
+    template = get_resource(ResourceType.templates, 'cli_explain')
     template_format = template + '\n' + cli_command
     user_message = {'role': 'user', 'content': template_format}
     messages.append(user_message)

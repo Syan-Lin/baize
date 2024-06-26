@@ -3,6 +3,7 @@ import shutil
 import sys
 from rich.console import Console
 from importlib.metadata import distributions
+from utils.resource import ResourceType
 from rich import print as rprint
 
 
@@ -21,14 +22,14 @@ def copy_config_files(base_dir: str):
 
 
 def copy_template_files(base_dir: str):
-    template_dir = os.path.join(base_dir, 'templates')
+    template_dir = os.path.join(base_dir, ResourceType.templates)
     if not os.path.exists(template_dir):
         os.makedirs(template_dir)
     else:
         shutil.rmtree(template_dir)
         os.makedirs(template_dir)
 
-    source_dir = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'templates')
+    source_dir = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), ResourceType.templates)
     for item in os.listdir(source_dir):
         item_path = os.path.join(source_dir, item)
         if os.path.isdir(item_path):

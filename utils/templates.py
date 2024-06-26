@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime
 from rich import print as rprint
-from utils.resource import print_resource_table, get_resource_path, get_resource_list
+from utils.resource import print_resource_table, get_resource_path, get_resource_list, ResourceType
 
 
 def expand_prompt(input_prompt: list[str]) -> str:
@@ -46,7 +46,7 @@ def create_template():
         choice = input()
 
     if choice == 'y':
-        template_root_path = get_resource_path('templates')
+        template_root_path = get_resource_path(ResourceType.templates)
         new_template_path = os.path.join(template_root_path, template_name)
         if os.path.exists(new_template_path):
             rprint('[red]错误: 模板已存在，无法创建！[/red]')
@@ -65,7 +65,7 @@ def create_template():
 
 
 def delete_template(delete_templates: list[str]):
-    template_list = get_resource_list('templates')
+    template_list = get_resource_list(ResourceType.templates)
 
     def in_list(template: str) -> bool:
         for template_meta in template_list:
@@ -100,5 +100,5 @@ def delete_template(delete_templates: list[str]):
     if choice == 'y':
         for template in delete_list:
             import shutil
-            shutil.rmtree(os.path.join(get_resource_path('templates'), template))
+            shutil.rmtree(os.path.join(get_resource_path(ResourceType.templates), template))
         rprint('[green]删除成功！[/green]')

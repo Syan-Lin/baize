@@ -1,6 +1,7 @@
 import sys
 from llm.base_llm import BaseLLM
 from utils.render import print_markdown, print_markdown_stream
+from utils.resource import get_resource, print_resource_table, ResourceType
 from rich import print as rprint
 from argparse import Namespace
 
@@ -66,16 +67,14 @@ def setting_args_parse(args: Namespace):
         print_model_list()
         sys.exit()
     elif args.workflowlist:
-        from utils.workflow.workflow import print_workflow_table
-        print_workflow_table()
+        print_resource_table(ResourceType.workflow)
         sys.exit()
     elif args.set:
         from utils.config import set_default_config
         set_default_config(args.set[0])
         sys.exit()
     elif args.list:
-        from utils.resource import print_resource_table
-        print_resource_table('templates')
+        print_resource_table(ResourceType.templates)
         sys.exit()
     elif args.context:
         from utils.context import load_context
@@ -102,8 +101,7 @@ def setting_args_parse(args: Namespace):
         delete_template(args.deletetemplate)
         sys.exit()
     elif args.showtemplate:
-        from utils.resource import get_resource
-        template = get_resource('templates', args.showtemplate[0])
+        template = get_resource(ResourceType.templates, args.showtemplate[0])
         print_markdown(template)
         sys.exit()
     elif args.init:
@@ -154,8 +152,7 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     # 构造模板
     template = None
     if args.template:
-        from utils.resource import get_resource
-        template = get_resource('templates', args.template[0])
+        template = get_resource(ResourceType.templates, args.template[0])
 
     from utils.templates import expand_prompt
     if template is None:

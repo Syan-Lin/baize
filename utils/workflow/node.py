@@ -4,6 +4,7 @@ import json
 import subprocess
 from abc import ABC, abstractmethod
 from rich import print as rprint
+from utils.resource import get_resource, ResourceType
 
 
 class Node(ABC):
@@ -122,8 +123,7 @@ class LLMNode(Node):
 
         prompt = ''
         if self.template != '':
-            from utils.resource import get_resource
-            prompt += get_resource('templates', self.template) + '\n'
+            prompt += get_resource(ResourceType.templates, self.template) + '\n'
         if self.content != '':
             prompt += self.content
         if prompt == '':
