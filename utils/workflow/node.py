@@ -294,8 +294,3 @@ class ScriptNode(Node):
 
         self.debug_output(output)
         return output
-
-
-class InterpreterNode(Node):
-    def __init__(self, name: str, python_path: str = ''):
-        super().__init__(name, 'interpreter')

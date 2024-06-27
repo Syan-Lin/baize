@@ -217,7 +217,7 @@ baize -w example
 示例的背后实际上定义了一个并行结构，对于输入的 `prompt`，会有两个「LLM 节点」同时生成一首诗，接着再有一个「LLM 节点」来判断哪一首诗更好，输出更好的那首诗
 
 ## 工具模式
-工具模式基于 function call 功能，使 baize 具有一定 Agent 的能力，例如调用一些预定义的接口，如天气查询、航班查询等。使 baize 可以执行现实中的动作，帮助我们解决一些简单的实际问题。考虑到目前大模型能力有限，当前仅在简单问题上能够执行得比较好
+工具模式基于 function call 功能，使 baize 具有一定 Agent 的能力，例如调用一些预定义的接口，如天气查询、航班查询等。使 baize 可以执行现实中的动作，帮助我们解决一些简单的实际问题。考虑到目前各家大模型 Agent 的能力差异较大，需要能力较强的大模型才能很好地执行工具模式
 
 通过 `--tool` 来指定一个预定义的工具执行，工具所对应的代码和调用接口目前需要手动配置
 
@@ -225,29 +225,35 @@ baize -w example
 # interpreter 是 Python 解释器，可以执行大模型输出的代码
 baize --tool interpreter --log
 > 使用牛顿迭代法计算 x^3 = 5 的解
-interpreter:
-def f(x): return x**3 - 5
+正在调用 `exec_code`
 
-# 牛顿迭代法
-x0 = 1.0  # 初始猜测值
-eps = 1e-10  # 误差限
-while True:
-    x1 = x0 - f(x0) / (3 * x0**2)
-    if abs(x1 - x0) < eps:
-        break
-    x0 = x1
+exec_code(code="""def newton_iteration(x0, iterations=10):
+    x = x0
+    for _ in range(iterations):
+        x = x - (x**3 - 5) / (3 * x**2)
+    return x
 
-print(x1)
+initial_guess = 1
+iterations = 10
+result = newton_iteration(initial_guess, iterations)
+print(result)""")
+
+{'stdout': '1.709975946676697\n', 'stderr': ''}
 
 使用牛顿迭代法计算 x^3 = 5 的解为 x ≈ 1.70998。
 
 # weather 是天气查询工具，定义了获取当前日期和根据日期、地点查询未来七天天气的函数
 baize --tool weather --log
 > 查询今天上海的天气
-get_current_date:
-2024-06-27
+正在调用 `get_current_date`
 
-get_weather:
+get_current_date()
+
+2024-06-24
+正在调用 `get_weather`
+
+get_weather(city="""上海""",date="""2024-06-24""")
+
 {'reason': '查询成功!', 'result': {'city': '上海', 'realtime': {'temperature': '23', 'humidity': '96', 'info': '中雨', 'wid': '08', 'direct': '北风', 'power': '0级', 'aqi': '19'}, 'future': [{'date': '2024-06-27', 'temperature':
 '23/25℃', 'weather': '中雨', 'wid': {'day': '08', 'night': '08'}, 'direct': '持续无风向'}, {'date': '2024-06-28', 'temperature': '24/27℃', 'weather': '小雨', 'wid': {'day': '07', 'night': '07'}, 'direct': '持续无风向'}, {'date':
 '2024-06-29', 'temperature': '26/31℃', 'weather': '阴转小雨', 'wid': {'day': '02', 'night': '07'}, 'direct': '持续无风向'}, {'date': '2024-06-30', 'temperature': '26/31℃', 'weather': '小雨', 'wid': {'day': '07', 'night': '07'},
