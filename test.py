@@ -205,8 +205,10 @@ def test_input():
     chat = pexpect.spawn(f'{python_path} {baize_path} 你好 -f {licence} --log')
     check(chat, 'file')
 
-    # img 测试需要模型支持
-    pass
+    # img
+    banner = os.path.join(os.path.dirname(baize_path), 'banner.png')
+    chat = pexpect.spawn(f'{python_path} {baize_path} 你好 -i {banner} --log')
+    check(chat, 'img')
 
 
 def test_output():
