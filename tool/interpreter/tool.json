@@ -1,0 +1,22 @@
+{
+    "python": "python",
+    "tools": [
+        {
+            "type": "function",
+            "function": {
+                "name": "exec_code",
+                "description": "执行 pyhon 代码，并返回执行结果",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "code": {
+                            "description": "所要执行的 python 代码，只有执行 print 函数才会得到相应的输出",
+                            "type": "string"
+                        }
+                    },
+                    "required": [ "code" ]
+                }
+            }
+        }
+    ]
+}

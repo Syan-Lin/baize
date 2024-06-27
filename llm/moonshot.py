@@ -55,4 +55,22 @@ class Moonshot(BaseLLM):
 
 
     def call_tool(self, tools: dict, message: list[dict]) -> tuple[str, str, dict, dict]:
-        return super().call_tool(tools, message)
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=message,
+            temperature=self.model_config.get("temperature"),
+            top_p=self.model_config.get("top_p"),
+            frequency_penalty=self.model_config.get("frequency_penalty"),
+            presence_penalty=self.model_config.get("presence_penalty"),
+            tools=tools,
+        )
+        response = response.choices[0].message
+        response_message, function_name, args, tool_message = None, None, None, None
+
+        if response.tool_calls is not None:
+            function_name = response.tool_calls[0].function.name
+            args = response.tool_calls[0].function.arguments
+            tool_message = response.model_dump()
+        else:
+            response_message = response.content
+        return response_message, function_name, args, tool_message

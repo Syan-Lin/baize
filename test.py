@@ -277,6 +277,26 @@ def test_workflow():
     check(chat, 'workflow + log')
 
 
+def test_tool():
+    console.print(Markdown('# Tool Test'))
+
+    # tool
+    chat = pexpect.spawn(f'{python_path} {baize_path} --tool interpreter')
+    chat.expect('> ')
+    chat.sendline('你好')
+    chat.expect('> ')
+    chat.sendline('使用牛顿迭代法计算 x^3 = 5 的解')
+    check(chat, 'tool')
+
+    # tool + log
+    chat = pexpect.spawn(f'{python_path} {baize_path} --tool interpreter --log')
+    chat.expect('> ')
+    chat.sendline('你好')
+    chat.expect('> ')
+    chat.sendline('现在的时间是什么时候？')
+    check(chat, 'tool + log')
+
+
 if __name__ == "__main__":
     # 测试需要保证已经配置过一个名叫 test 的模型
     # 测试会使用 test 模型进行测试
@@ -295,3 +315,4 @@ if __name__ == "__main__":
     test_output()
     test_cli_mode()
     test_workflow()
+    test_tool()

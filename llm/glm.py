@@ -81,10 +81,13 @@ class GLM(BaseLLM):
             top_p=self.model_config.get("top_p"),
             tools=tools,
         )
-        response_message = response.choices[0].message.content
-        function_name, args, tool_message = None, None, None
-        if response_message is None or response_message == '':
-            function_name = response.choices[0].message.tool_calls[0].function.name
-            args = response.choices[0].message.tool_calls[0].function.arguments
-            tool_message = response.choices[0].message.model_dump()
+        response = response.choices[0].message
+        response_message, function_name, args, tool_message = None, None, None, None
+
+        if response.tool_calls is not None:
+            function_name = response.tool_calls[0].function.name
+            args = response.tool_calls[0].function.arguments
+            tool_message = response.model_dump()
+        else:
+            response_message = response.content
         return response_message, function_name, args, tool_message
