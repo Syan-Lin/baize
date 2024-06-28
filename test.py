@@ -302,6 +302,16 @@ def test_tool():
     check(chat, 'tool + log')
 
 
+def test_update():
+    console.print(Markdown('# Tool Test'))
+
+    chat = pexpect.spawn(f'{python_path} {baize_path} --update')
+    index = chat.expect([':', 'v'])
+    if index == 0:
+        chat.sendline('n')
+    check(chat, 'update')
+
+
 if __name__ == "__main__":
     # 测试需要保证已经配置过一个名叫 test 的模型
     # 测试会使用 test 模型进行测试
@@ -322,3 +332,4 @@ if __name__ == "__main__":
     test_cli_mode()
     test_workflow()
     test_tool()
+    test_update()
