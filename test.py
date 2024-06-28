@@ -1,3 +1,5 @@
+# Warning: pexpect 不支持 Windows 平台
+
 import os
 import sys
 import pexpect

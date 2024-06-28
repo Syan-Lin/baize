@@ -25,6 +25,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--context', action='store_true', help='查看 Context Prompt')
     parser.add_argument('--resetcontext', action='store_true', help='删除 Context Prompt')
     parser.add_argument('--setcontext', nargs=1, metavar='Context Prompt', type=str, help='设置 Context Prompt')
+    parser.add_argument('--update', action='store_true', help='查看更新')
 
     # 执行模式
     parser.add_argument('--tool', nargs=1, metavar='<tool name>', help='执行 Tool')

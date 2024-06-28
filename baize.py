@@ -114,6 +114,10 @@ def setting_args_parse(args: Namespace):
     elif args.version:
         print(f'baize {___VERSION___}')
         sys.exit()
+    elif args.update:
+        from utils.update import update
+        update()
+        sys.exit()
     elif args.deletemodel:
         from utils.setup import delete_model
         delete_model(args.deletemodel)
