@@ -37,6 +37,7 @@ pyperclip==1.8.2
 python-dateutil==2.9.0.post0
 pywin32-ctypes==0.2.2
 PyYAML==6.0.1
+requests==2.32.3
 rich==13.7.1
 setuptools==69.5.1
 six==1.16.0
