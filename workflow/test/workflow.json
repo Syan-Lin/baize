@@ -7,13 +7,12 @@
             },
             "age": {
                 "command": "echo 18"
-            },
-            "request": {}
+            }
         }
     },
     "llm_node": {
         "type": "llm",
-        "content": "你好, 我是 {}, 今年 {} 岁, 我的需求是 {}",
+        "content": "你好, 我是 {}, 今年 {} 岁",
         "model": "test",
         "input": [
             "input_node"

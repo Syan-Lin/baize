@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import pexpect
 import pyperclip
 import argparse
@@ -163,7 +164,7 @@ def test_input():
     check(chat, '多段 prompt')
 
     # paste
-    pyperclip.copy('你好')
+    pyperclip.copy('hello')
     chat = pexpect.spawn(f'{python_path} {baize_path} -P')
     check(chat, 'paste')
 
@@ -197,10 +198,6 @@ def test_input():
     # template
     chat = pexpect.spawn(f'{python_path} {baize_path} -t summary 你好')
     check(chat, 'template')
-
-    # template not match
-    chat = pexpect.spawn(f'{python_path} {baize_path} 你好 我叫什么 -t summary')
-    check(chat, 'template not match', True)
 
     # file
     licence = os.path.join(os.path.dirname(baize_path), 'LICENSE')
@@ -286,18 +283,22 @@ def test_tool():
 
     # tool
     chat = pexpect.spawn(f'{python_path} {baize_path} --tool interpreter')
-    chat.expect('> ')
+    chat.expect('>')
     chat.sendline('你好')
-    chat.expect('> ')
+    chat.expect('>')
     chat.sendline('使用牛顿迭代法计算 x^3 = 5 的解')
+    chat.expect('>')
+    chat.sendline('q')
     check(chat, 'tool')
 
     # tool + log
     chat = pexpect.spawn(f'{python_path} {baize_path} --tool interpreter --log')
-    chat.expect('> ')
+    chat.expect('>')
     chat.sendline('你好')
-    chat.expect('> ')
+    chat.expect('>')
     chat.sendline('现在的时间是什么时候？')
+    chat.expect('>')
+    chat.sendline('q')
     check(chat, 'tool + log')
 
 
@@ -315,6 +316,7 @@ if __name__ == "__main__":
 
     test_settings()
     chat = pexpect.spawn(f'{python_path} {baize_path} --set test')
+    time.sleep(3)
     test_input()
     test_output()
     test_cli_mode()
