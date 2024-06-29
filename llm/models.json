@@ -9,6 +9,11 @@
         "base_url": "https://api.deepseek.com/v1",
         "models": ["deepseek-chat", "deepseek-coder"]
     },
+    "ollama": {
+        "family": "Ollama",
+        "base_url": "127.0.0.1:11434",
+        "models": ["ollama"]
+    },
     "glm": {
         "family": "智谱 AI",
         "base_url": "https://open.bigmodel.cn/api/paas/v4",

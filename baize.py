@@ -31,6 +31,9 @@ def get_llm(model_name: str, model_config: dict) -> BaseLLM:
     elif model_name in models['moonshot']['models']:
         from llm.moonshot import Moonshot
         llm = Moonshot(model_name, model_config)
+    elif model_name in models['ollama']['models']:
+        from llm.ollama import Ollama
+        llm = Ollama(model_name, model_config)
     else:
         # 自定义模型默认使用 OpenAI API
         from llm.custom import CustomLLM

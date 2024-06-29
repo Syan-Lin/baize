@@ -133,6 +133,12 @@ def setup():
         endpoint_id = input_param('推理接入点 ID')
         new_config['endpoint_id'] = endpoint_id
         model_name = 'doubao'
+    elif model_family == 'ollama':
+        base_url = input_param('BASE_URL', True)
+        model_name = 'ollama'
+        checkpoint = input_param('模型名')
+        new_config['checkpoint'] = checkpoint
+        api_key = None
     else:
         model_name = choose_model(models[model_family]['models'])
         base_url = input_param('BASE_URL', True)
