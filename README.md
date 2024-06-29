@@ -23,6 +23,8 @@ baize 是一个将 LLM 能力集成至 Terminal 终端的工具框架，支持�
 - [月之暗面](https://platform.moonshot.cn/)
 - Ollama
 
+https://github.com/Syan-Lin/baize/assets/57340079/dae3b8f4-92bc-493f-b6ca-4b6790870dc8
+
 # 为什么需要 baize
 
 简而言之，在终端中集成方便的 LLM 是一个刚需：
