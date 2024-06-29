@@ -21,6 +21,7 @@ baize 是一个将 LLM 能力集成至 Terminal 终端的工具框架，支持�
 - [豆包](https://www.volcengine.com/product/doubao)
 - [OpenAI](https://platform.openai.com/)
 - [月之暗面](https://platform.moonshot.cn/)
+- Ollama
 
 # 为什么需要 baize
 
