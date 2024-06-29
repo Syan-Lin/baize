@@ -79,7 +79,10 @@ def cli_main(args: Namespace, llm: BaseLLM):
         choice = input(f'\n`{cli_command}` 是否执行 [y/n]: ')
     if choice == 'y':
         result = subprocess.run(cli_command, capture_output=True, text=True, shell=True, encoding='utf-8')
-        print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+        else:
+            print(result.stdout)
 
         result_message = {'role': 'system', 'content': result.stdout}
         messages.append(result_message)
