@@ -2,11 +2,11 @@ import os
 import json
 import yaml
 from rich import print as rprint
+from utils.resource import get_root_path
 
 def models_info() -> dict:
     '''获取所有支持的模型信息'''
-    user_home = os.path.expanduser('~')
-    models_info_path = os.path.join(user_home, 'baize', 'models.json')
+    models_info_path = os.path.join(get_root_path(), 'models.json')
 
     if not os.path.exists(models_info_path):
         raise FileNotFoundError(f'路径 {models_info_path} 不存在, 请重新安装 baize。')
@@ -17,8 +17,7 @@ def models_info() -> dict:
 
 def model_config() -> dict:
     '''获取所有已注册的模型信息'''
-    user_home = os.path.expanduser('~')
-    config_path = os.path.join(user_home, 'baize', 'config.yaml')
+    config_path = os.path.join(get_root_path(), 'config.yaml')
 
     if not os.path.exists(config_path):
         return {}
@@ -37,8 +36,7 @@ def set_default_config(model_name: str):
 
 
 def save_model_config(config: dict):
-    user_home = os.path.expanduser('~')
-    config_path = os.path.join(user_home, 'baize', 'config.yaml')
+    config_path = os.path.join(get_root_path(), 'config.yaml')
 
     with open(config_path, 'w', encoding='utf-8') as f:
         yaml.dump(config, f, allow_unicode=True)

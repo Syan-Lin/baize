@@ -8,9 +8,18 @@ class ResourceType:
     tool = 'tool'
 
 
-def get_resource_path(resource: str) -> str:
+def get_root_path() -> str:
     user_home = os.path.expanduser('~')
-    root_path = os.path.join(user_home, 'baize', resource)
+    root_path = os.path.join(user_home, '.baize')
+
+    if not os.path.exists(root_path):
+        os.makedirs(root_path)
+
+    return root_path
+
+
+def get_resource_path(resource: str) -> str:
+    root_path = os.path.join(get_root_path(), resource)
 
     if not os.path.exists(root_path):
         raise FileNotFoundError(f'路径 {root_path} 不存在, 请重新安装 baize。')

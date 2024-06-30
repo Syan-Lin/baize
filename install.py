@@ -3,7 +3,7 @@ import shutil
 import sys
 from rich.console import Console
 from importlib.metadata import distributions
-from utils.resource import ResourceType
+from utils.resource import ResourceType, get_root_path
 from rich import print as rprint
 
 
@@ -40,10 +40,7 @@ if __name__ == "__main__":
     if not is_package_installed('pyinstaller'):
         print('请先安装 pyinstaller 再执行该程序')
         sys.exit()
-    user_home = os.path.expanduser('~')
-    base_dir = os.path.join(user_home, 'baize')
-    if not os.path.exists(base_dir):
-        os.makedirs(base_dir)
+    root_path = get_root_path()
 
     console = Console()
 
@@ -59,15 +56,15 @@ if __name__ == "__main__":
     excute_file = os.listdir(os.path.join(script_dir, 'dist'))[0]
     excute_path = os.path.join(script_dir, 'dist', excute_file)
 
-    shutil.copy(excute_path, os.path.join(base_dir, excute_file))
+    shutil.copy(excute_path, os.path.join(root_path, excute_file))
 
     shutil.rmtree(os.path.join(script_dir, 'dist'))
     shutil.rmtree(os.path.join(script_dir, 'build'))
     os.remove(os.path.join(script_dir, 'baize.spec'))
 
-    copy_config_files(base_dir)
-    copy_resource_files(base_dir, ResourceType.templates)
-    copy_resource_files(base_dir, ResourceType.workflow)
-    copy_resource_files(base_dir, ResourceType.tool)
+    copy_config_files(root_path)
+    copy_resource_files(root_path, ResourceType.templates)
+    copy_resource_files(root_path, ResourceType.workflow)
+    copy_resource_files(root_path, ResourceType.tool)
 
-    rprint(f'程序已被安装至 [green]`{base_dir}`[/green]，请手动将程序添加至环境变量中')
+    rprint(f'程序已被安装至 [green]`{root_path}`[/green]，请手动将程序添加至环境变量中')
