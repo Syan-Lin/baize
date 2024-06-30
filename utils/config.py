@@ -26,13 +26,13 @@ def model_config() -> dict:
         return yaml.safe_load(f)
 
 
-def set_default_config(model_name: str):
+def set_default_config(config_name: str):
     config = model_config()
-    if model_name not in list(config.keys()):
-        raise ValueError(f'模型 {model_name} 未注册，无法设置为默认模型！')
-    config['default_config'] = model_name
+    if config_name not in list(config.keys()):
+        raise ValueError(f'配置 {config_name} 未注册，无法设置为默认配置！')
+    config['default_config'] = config_name
     save_model_config(config)
-    rprint(f'[green]已将模型 {model_name} 设置为默认模型[/green]')
+    rprint(f'[green]已将配置 {config_name} 设置为默认配置[/green]')
 
 
 def save_model_config(config: dict):
@@ -43,17 +43,17 @@ def save_model_config(config: dict):
 
 
 def print_model_list():
-    models = model_config()
+    configs = model_config()
 
-    if len(models) == 0:
-        rprint('[red]错误: 无模型可用，请执行[/red] [green]`baize --setup`[/green] [red]进行初始化[/red]')
+    if len(configs) == 0:
+        rprint('[red]错误: 无配置可用，请执行[/red] [green]`baize --setup`[/green] [red]进行初始化[/red]')
         return
 
-    used_model = models['default_config']
-    models.pop('default_config')
+    used_config = configs['default_config']
+    configs.pop('default_config')
 
-    for model_name in models.keys():
-        if model_name == used_model:
-            rprint(f'[bold green]*{model_name}[/bold green]')
+    for config, info in configs.items():
+        if config == used_config:
+            rprint(f'[bold green]*{config}: {info['model_name']}[/bold green]')
         else:
-            print(model_name)
+            print(f'{config}: {info['model_name']}')
