@@ -1,21 +1,20 @@
 import os
 import json
 from rich import print as rprint
+from utils.resource import get_root_path
 
 
 def save_previous(messages: list[dict], response: str = ''):
     if response != '':
         messages.append({"role": "assistant", "content": response})
 
-    user_home = os.path.expanduser('~')
-    history_path = os.path.join(user_home, 'baize', 'history.json')
+    history_path = os.path.join(get_root_path(), 'history.json')
     with open(history_path, "w", encoding="utf-8") as f:
         json.dump(messages, f, ensure_ascii=False)
 
 
 def load_previous() -> list[dict]:
-    user_home = os.path.expanduser('~')
-    history_path = os.path.join(user_home, 'baize', 'history.json')
+    history_path = os.path.join(get_root_path(), 'history.json')
     if os.path.exists(history_path):
         with open(history_path, "r", encoding="utf-8") as f:
             history = json.load(f)
@@ -25,8 +24,7 @@ def load_previous() -> list[dict]:
 
 
 def load_context() -> str:
-    user_home = os.path.expanduser('~')
-    context_path = os.path.join(user_home, 'baize', 'context.md')
+    context_path = os.path.join(get_root_path(), 'context.md')
     if os.path.exists(context_path):
         with open(context_path, "r", encoding="utf-8") as f:
             context = f.read()
@@ -36,8 +34,7 @@ def load_context() -> str:
 
 
 def save_context(text: str):
-    user_home = os.path.expanduser('~')
-    context_path = os.path.join(user_home, 'baize', 'context.md')
+    context_path = os.path.join(get_root_path(), 'context.md')
     with open(context_path, "w", encoding="utf-8") as f:
         f.write(text)
 

@@ -2,6 +2,7 @@ import os
 from rich.console import Console
 from rich import print as rprint
 from pyboxmaker import box
+from utils.resource import get_root_path
 
 console = Console()
 
@@ -12,9 +13,8 @@ def append_path(bash_file: str):
         rprint(f'[red]错误: 文件不存在: {file_path}[/red]')
         return
 
-    root = os.path.expanduser('~')
-    baize_path = os.path.join(root, 'baize')
-    append_line = f'export PATH="$PATH:{baize_path}"'
+    baize_path = get_root_path()
+    append_line = f'# Created by baize\nexport PATH="$PATH:{baize_path}"'
 
     with open(file_path, 'r') as f:
         file_content = f.read()

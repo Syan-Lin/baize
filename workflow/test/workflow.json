@@ -21,7 +21,7 @@
     },
     "script_node": {
         "type": "script",
-        "script": "~/baize/workflow/test/script.py",
+        "script": "~/.baize/workflow/test/script.py",
         "function": "reverse",
         "input": [
             "llm_node"
