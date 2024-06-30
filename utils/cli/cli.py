@@ -8,6 +8,10 @@ from utils.resource import get_resource, ResourceType
 from utils.context import print_messages
 
 
+def remove_wrapper(message: str):
+    return message.strip().strip('```bash').strip('```').strip()
+
+
 def make_cli_prompt(args: Namespace) -> list[dict]:
     # Prompt 输入
     if not args.prompt and not args.paste:
@@ -27,9 +31,6 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
     user_message = {'role': 'user', 'content': template_format}
     messages.append(user_message)
 
-    if args.log:
-        print_messages(messages)
-
     return messages
 
 
@@ -40,16 +41,12 @@ def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
     user_message = {'role': 'user', 'content': template_format}
     messages.append(user_message)
 
-    if args.clidetail and args.log:
-        print('============================')
-        print_messages(messages)
-
     return messages
 
 
 def cli_main(args: Namespace, llm: BaseLLM):
     messages = make_cli_prompt(args)
-    cli_command = llm.message(messages)
+    cli_command = remove_wrapper(llm.message(messages))
     messages.append({'role': 'assistant', 'content': cli_command})
 
     stream = False
@@ -57,8 +54,8 @@ def cli_main(args: Namespace, llm: BaseLLM):
         stream = True
 
     buffer = ''
-    messages_explain = make_cli_explain(args, cli_command)
     if args.clidetail:
+        messages_explain = make_cli_explain(args, cli_command)
         if stream:
             response = llm.stream_message(messages_explain)
             for block in response:
@@ -73,10 +70,15 @@ def cli_main(args: Namespace, llm: BaseLLM):
             else:
                 sys.stdout.write(response)
                 sys.stdout.flush()
+        messages.append({'role': 'assistant', 'content': buffer})
+        print()
+
+    if args.log:
+        print_messages(messages)
 
     choice = ''
     while choice != 'y' and choice != 'n':
-        choice = input(f'\n`{cli_command}` 是否执行 [y/n]: ')
+        choice = input(f'`{cli_command}` 是否执行 [y/n]: ')
     if choice == 'y':
         result = subprocess.run(cli_command, capture_output=True, text=True, shell=True, encoding='utf-8')
         if result.stderr:
