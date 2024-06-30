@@ -2,6 +2,7 @@ import sys
 from llm.base_llm import BaseLLM
 from utils.render import print_markdown, print_markdown_stream
 from utils.resource import get_resource, print_resource_table, ResourceType
+from utils.context import load_context, save_context, print_messages, load_previous, save_previous
 from rich import print as rprint
 from argparse import Namespace
 
@@ -83,7 +84,6 @@ def setting_args_parse(args: Namespace):
         print_resource_table(ResourceType.templates)
         sys.exit()
     elif args.context:
-        from utils.context import load_context
         context = load_context()
         if context != '':
             print_markdown(context)
@@ -91,11 +91,9 @@ def setting_args_parse(args: Namespace):
             print('Context 未设置')
         sys.exit()
     elif args.setcontext:
-        from utils.context import save_context
         save_context(args.setcontext[0])
         sys.exit()
     elif args.resetcontext:
-        from utils.context import save_context
         save_context('')
         sys.exit()
     elif args.createtemplate:
@@ -120,6 +118,9 @@ def setting_args_parse(args: Namespace):
     elif args.update:
         from utils.update import update
         update()
+        sys.exit()
+    elif args.history:
+        print_messages(load_previous())
         sys.exit()
     elif args.deletemodel:
         from utils.setup import delete_model
@@ -148,13 +149,11 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
 
     # 历史对话引入
     if args.previous:
-        from utils.context import load_previous
         history = load_previous()
         if len(history) > 0:
             messages += history
     else:
         # Context 引入
-        from utils.context import load_context
         context = load_context()
         if context != '':
             messages.append({'role': 'system', 'content': context})
@@ -198,7 +197,6 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
         messages.append(user_message)
 
     if args.log:
-        from utils.context import print_messages
         print_messages(messages)
 
     return messages
@@ -271,7 +269,6 @@ def main() -> None:
         response = output_parse(args, llm, messages)
 
         # 历史对话保存
-        from utils.context import save_previous
         save_previous(messages, response)
 
 if __name__ == '__main__':

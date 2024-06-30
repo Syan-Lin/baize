@@ -199,6 +199,10 @@ def test_input():
     chat = pexpect.spawn(f'{python_path} {baize_path} -t summary 你好')
     check(chat, 'template')
 
+    # history
+    chat = pexpect.spawn(f'{python_path} {baize_path} -H')
+    check(chat, 'history')
+
     # file
     licence = os.path.join(os.path.dirname(baize_path), 'LICENSE')
     chat = pexpect.spawn(f'{python_path} {baize_path} 你好 -f {licence} --log')

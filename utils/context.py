@@ -45,10 +45,10 @@ def print_messages(messages: list[dict]):
         content = message["content"]
         if role == 'assistant':
             if 'tool_calls' in message and message['tool_calls'] is not None:
-               rprint(f'[blue]{role}:\n{message['tool_calls']}[/blue]')
+               rprint(f'[blue]{role}:\n{message['tool_calls']}[/blue]\n')
             else:
-                rprint(f'[blue]{role}:\n{content}[/blue]')
+                rprint(f'[blue]{role}:\n{content}[/blue]\n')
         elif role == 'user':
-            rprint(f'[green]{role}:\n{content}[/green]')
+            rprint(f'[green]{role}:\n{content}[/green]\n')
         else:
-            rprint(f'[red]{role}:\n{content}[/red]')
+            rprint(f'[red]{role}:\n{content}[/red]\n')
