@@ -39,44 +39,53 @@ class InputNode(Node):
     def __init__(self, name: str, input_dict: dict):
         super().__init__(name, "input")
         self.input_dict = input_dict
+        self.param = {}
 
 
     def output(self) -> dict:
-        param = {}
-        for param_name, value in self.input_dict.items():
+        if len(self.param) > 0:
+            return self.param
 
+        for param_name, value in self.input_dict.items():
             if self.debug and 'command' in value:
                 rprint(f'节点 [green]{self.name}[/green] 执行命令: [red]{value['command']}[/red]')
 
             if 'content' in value:
-                param[param_name] = value['content']
+                self.param[param_name] = value['content']
             elif 'command' in value:
                 import subprocess
                 result = subprocess.run(value['command'], capture_output=True, text=True, shell=True, encoding='utf-8')
                 if result.stdout:
-                    param[param_name] = result.stdout
+                    self.param[param_name] = result.stdout
                 if result.stderr:
                     rprint(f'[red]错误: 节点 {self.name} 中，命令 [/red][green]`{self.command}`[/green] [red]执行错误:\n {result.stderr}[/red]')
                     sys.exit()
             else:
                 rprint(f'请输入参数[green] {param_name} [/green]: ')
-                param[param_name] = input()
+                self.param[param_name] = input()
 
-        self.debug_output(param)
-        return param
+        self.debug_output(self.param)
+        return self.param
 
 
 def make_llm_node(name: str, config: dict) -> Node:
-    if 'model' not in config:
-        rprint(f'[red]错误: 节点 {name} 缺少 model 参数！[/red]')
-        sys.exit()
-    model = config['model']
+    if 'config' not in config:
+        from utils.config import model_config
+        configs_info = model_config()
+        if 'default_config' not in configs_info.keys():
+            rprint('[red]错误: 请先运行 `baize --setup` 配置模型[/red]')
+            sys.exit()
+        config_name = configs_info['default_config']
+    else:
+        config_name = config['config']
 
-    template, content = '', ''
+    template, content, system = '', '', ''
     if 'template' in config:
         template = config['template']
     if 'content' in config:
         content = config['content']
+    if 'system' in config:
+        system = config['system']
     if template == '' and content == '':
         rprint(f'[red]错误: 节点 {name} 至少需要 template 或 content 参数[/red]')
         sys.exit()
@@ -86,12 +95,12 @@ def make_llm_node(name: str, config: dict) -> Node:
         sys.exit()
 
     output = config['output']
-    return LLMNode(name, model, template, content, output)
+    return LLMNode(name, config_name, template, content, output, system)
 
 
 class LLMNode(Node):
     '''大语言执行 Node, 用于调用 LLM, 其输入是其他节点的输出'''
-    def __init__(self, name: str, config_name: str, template: str = '', content: str = '', output_param: str = ''):
+    def __init__(self, name: str, config_name: str, template: str = '', content: str = '', output_param: str = '', system_prompt: str = ''):
         super().__init__(name, 'llm')
 
         from utils.config import model_config
@@ -106,6 +115,8 @@ class LLMNode(Node):
         self.template = template
         self.content = content
         self.output_param = output_param
+        self.system_prompt = system_prompt
+        self.response = {}
 
 
     def add_input(self, input: Node):
@@ -113,6 +124,8 @@ class LLMNode(Node):
 
 
     def output(self) -> dict:
+        if len(self.response) > 0:
+            return self.response
         if len(self.input) == 0:
             raise ValueError(f'节点 {self.name} 没有输入')
 
@@ -147,15 +160,17 @@ class LLMNode(Node):
             rprint(f'节点 [green]{self.name}[/green] prompt:\n[blue]{prompt_format}[/blue]')
 
         messages = []
+        if self.system_prompt != '':
+            messages.append({'role': 'system', 'content': self.system_prompt})
         messages.append({'role': 'user', 'content': prompt_format})
         result = self.llm.message(messages)
         if self.output_param != '':
-            output = {self.output_param: result}
+            self.response = {self.output_param: result}
         else:
-            output = {'output': result}
+            self.response = {'output': result}
 
-        self.debug_output(output)
-        return output
+        self.debug_output(self.response)
+        return self.response
 
 
 def make_output_node(name: str, config: dict) -> Node:
@@ -185,14 +200,14 @@ class OutputNode(Node):
         for inp in self.input:
             output.update(inp.output())
 
-        output_text = ''
+        output_text = '\n'
         for key, value in output.items():
             output_text += f'{key}:\n{value}\n\n'
 
         self.debug_output(output)
 
         if self.to == 'console':
-            print(output_text, end='')
+            rprint(f'[green]{output_text}[/green]', end='')
         else:
             with open(self.to, 'w', encoding='utf-8') as f:
                 f.write(output_text)
