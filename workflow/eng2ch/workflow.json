@@ -1,0 +1,45 @@
+{
+    "input_node": {
+        "type": "input",
+        "output": {
+            "text": {}
+        }
+    },
+    "first_trans": {
+        "type": "llm",
+        "system": "You are an expert linguist, specializing in translation from English to Chinese.",
+        "content": "This is an English to Chinese translation, please provide the Chinese translation for this text. \nDo not provide any explanations or text apart from the translation.\nEnglish: {}\n\nChinese:",
+        "input": [
+            "input_node"
+        ],
+        "output": "first_trans"
+    },
+    "reflection": {
+        "type": "llm",
+        "system": "You are an expert linguist specializing in translation from English to Chinese. \nYou will be provided with a source text and its translation and your goal is to improve the translation.",
+        "content": "Your task is to carefully read a source text and a translation from English to Chinese, and then give constructive criticism and helpful suggestions to improve the translation. \n\nThe source text and initial translation, delimited by XML tags <SOURCE_TEXT></SOURCE_TEXT> and <TRANSLATION></TRANSLATION>, are as follows:\n\n<SOURCE_TEXT>\n{}\n</SOURCE_TEXT>\n\n<TRANSLATION>\n{}\n</TRANSLATION>\n\nWhen writing suggestions, pay attention to whether there are ways to improve the translation's \n\n(i) accuracy (by correcting errors of addition, mistranslation, omission, or untranslated text),\n\n(ii) fluency (by applying Chinese grammar, spelling and punctuation rules, and ensuring there are no unnecessary repetitions),\n\n(iii) style (by ensuring the translations reflect the style of the source text and takes into account any cultural context),\n\n(iv) terminology (by ensuring terminology use is consistent and reflects the source text domain; and by only ensuring you use equivalent idioms Chinese).\n\nWrite a list of specific, helpful and constructive suggestions for improving the translation.\nEach suggestion should address one specific part of the translation.\nOutput only the suggestions and nothing else.",
+        "input": [
+            "input_node",
+            "first_trans"
+        ],
+        "output": "reflection"
+    },
+    "improve": {
+        "type": "llm",
+        "system": "You are an expert linguist, specializing in translation editing from English to Chinese.",
+        "content": "Your task is to carefully read, then edit, a translation from English to Chinese, taking into\naccount a list of expert suggestions and constructive criticisms.\n\nThe source text, the initial translation, and the expert linguist suggestions are delimited by XML tags <SOURCE_TEXT></SOURCE_TEXT>, <TRANSLATION></TRANSLATION> and <EXPERT_SUGGESTIONS></EXPERT_SUGGESTIONS> \nas follows:\n\n<SOURCE_TEXT>\n{}\n\n</SOURCE_TEXT>\n\n<TRANSLATION>\n{}\n</TRANSLATION>\n\n<EXPERT_SUGGESTIONS>\n{}\n</EXPERT_SUGGESTIONS>\n\nPlease take into account the expert suggestions when editing the translation. Edit the translation by ensuring:\n\n(i) accuracy (by correcting errors of addition, mistranslation, omission, or untranslated text),\n(ii) fluency (by applying Chinese grammar, spelling and punctuation rules and ensuring there are no unnecessary repetitions), \n(iii) style (by ensuring the translations reflect the style of the source text)\n(iv) terminology (inappropriate for context, inconsistent use), or\n(v) other errors.\n\nOutput only the new translation and nothing else.",
+        "input": [
+            "input_node",
+            "first_trans",
+            "reflection"
+        ],
+        "output": "output"
+    },
+    "output_node": {
+        "type": "output",
+        "to": "console",
+        "input": [
+            "improve"
+        ]
+    }
+}
