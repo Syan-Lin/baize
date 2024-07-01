@@ -62,7 +62,14 @@ class InputNode(Node):
                     sys.exit()
             else:
                 rprint(f'请输入参数[green] {param_name} [/green]: ')
-                self.param[param_name] = input()
+                in_loop = True
+                param_content = ''
+                while in_loop:
+                   user_input = input()
+                   if not user_input.endswith('\\'):
+                       in_loop = False
+                   param_content += user_input[:-1] + '\n'
+                self.param[param_name] = param_content
 
         self.debug_output(self.param)
         return self.param
