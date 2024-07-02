@@ -46,17 +46,17 @@ if __name__ == "__main__":
 
     with console.status("[bold green]PyInstaller 构建二进制程序...", spinner="toggle4") as status:
         import subprocess
-        result = subprocess.run('pyinstaller --onefile baize.py', capture_output=True, text=True, shell=True, encoding='utf-8')
+        result = subprocess.run('pyinstaller baize.py', capture_output=True, text=True, shell=True, encoding='utf-8')
         if result.stdout:
             print(result.stdout)
         if result.stderr:
             print(result.stderr)
 
     script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-    excute_file = os.listdir(os.path.join(script_dir, 'dist'))[0]
-    excute_path = os.path.join(script_dir, 'dist', excute_file)
+    dist_dir = os.path.join(script_dir, 'dist')
+    excute_file = os.listdir(dist_dir)[0]
 
-    shutil.copy(excute_path, os.path.join(root_path, excute_file))
+    shutil.copytree(os.path.join(dist_dir, excute_file), os.path.join(root_path), dirs_exist_ok=True)
 
     shutil.rmtree(os.path.join(script_dir, 'dist'))
     shutil.rmtree(os.path.join(script_dir, 'build'))
