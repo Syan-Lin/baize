@@ -1,9 +1,11 @@
 import os
 import requests
 import zipfile
+import tarfile
 from baize import ___VERSION___
 from packaging import version
 from rich import print as rprint
+from utils.resource import get_root_path
 from rich.progress import (
     BarColumn,
     DownloadColumn,
@@ -15,8 +17,7 @@ GIT_URL = 'https://api.github.com/repos/Syan-Lin/baize/releases/latest'
 
 
 def get_path(file: str):
-    user_home = os.path.expanduser('~')
-    root_path = os.path.join(user_home, 'baize', file)
+    root_path = os.path.join(get_root_path(), file)
     return root_path
 
 
@@ -50,10 +51,15 @@ def download_asset(url: str, file_path: str):
 
 
 def unpack_zip(file_path: str):
-    with zipfile.ZipFile(file_path, 'r') as zip_ref:
-        zip_ref.extractall(os.path.join(os.path.expanduser('~'), 'baize'))
+    if 'zip' in file_path:
+        with zipfile.ZipFile(file_path, 'r') as zip_ref:
+            zip_ref.extractall(get_root_path())
+    elif 'tar.gz' in file_path:
+        with tarfile.open(file_path, 'r:gz') as tar:
+            tar.extractall(get_root_path())
+    else:
+        raise ValueError("Unsupported file format")
 
-    zip_ref.close()
     os.remove(file_path)
 
 
@@ -67,15 +73,15 @@ def download_file(assets: list, file_name: str) -> bool:
     return False
 
 
-def download_exec(assets: list) -> bool:
+def download_exec(assets: list, tag_name: str) -> bool:
     import platform
     system_name = platform.system()
     if system_name == 'Linux':
-        return download_file(assets, 'baize_linux.zip')
+        return download_file(assets, f'baize_linux_{tag_name}.tar.gz')
     elif system_name == 'Darwin':
-        return download_file(assets, 'baize_mac.zip')
+        return download_file(assets, f'baize_mac_{tag_name}.tar.gz')
     elif system_name == 'Windows':
-        return download_file(assets, 'baize_windows.zip')
+        return download_file(assets, f'baize_windows_{tag_name}.zip')
     else:
         raise NotImplementedError(f'不支持的操作系统: {system_name}，请手动配置环境变量')
 
@@ -103,10 +109,7 @@ def update():
     try:
         os.rename(baize_path, backup_path)
         assets = release_info['assets']
-        if not download_file(assets, 'resource.zip'):
-            rprint(f'[red]错误: 下载资源失败！[/red]')
-            raise Exception
-        if not download_exec(assets):
+        if not download_exec(assets, release_info['tag_name']):
             rprint(f'[red]错误: 下载可执行文件失败！[/red]')
             raise Exception
     except:
