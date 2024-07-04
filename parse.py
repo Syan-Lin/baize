@@ -47,6 +47,10 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('--deletetemplate', nargs="*", metavar='<template>', type=str, help='删除 Prompt Template')
     parser.add_argument('--showtemplate', nargs=1, metavar='<template>', type=str, help='查看 Prompt Template')
 
+    # Tool 配置
+    parser.add_argument('--deletetool', nargs="*", metavar='<tool>', type=str, help='删除 Tool')
+    parser.add_argument('--createtool', action='store_true', help='创建 Tool')
+
     args = parser.parse_args()
 
     return args

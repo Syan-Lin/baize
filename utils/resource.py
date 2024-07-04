@@ -1,5 +1,6 @@
 import os
 import json
+from rich import print as rprint
 
 
 class ResourceType:
@@ -16,6 +17,55 @@ def get_root_path() -> str:
         os.makedirs(root_path)
 
     return root_path
+
+
+def delete_resource(resource_type: str, delete_names: list[str]):
+    resource_list = get_resource_list(resource_type)
+    if resource_type == ResourceType.templates:
+        resource_name = '模板'
+    elif resource_type == ResourceType.workflow:
+        resource_name = '流程'
+    elif resource_type == ResourceType.tool:
+        resource_name = '工具'
+    else:
+        raise ValueError(f'未知资源: {resource_type}')
+
+    def in_list(resource: str) -> bool:
+        for resource_meta in resource_list:
+            if resource == resource_meta['name']:
+                return True
+        return False
+
+    delete_list = []
+    for resource in delete_names:
+        if in_list(resource):
+            delete_list.append(resource)
+        else:
+            rprint(f'[yellow]{resource_name} {resource} 不存在！[/yellow]')
+    if len(delete_list) == 0:
+        rprint(f'[yellow]没有{resource_name}需要删除！[/yellow]')
+        return
+
+    rprint(f'[red]即将删除以下{resource_name}：[/red]')
+    delete_resource_meta = []
+    for resource in delete_list:
+        for resource_meta in resource_list:
+            if resource == resource_meta['name']:
+                delete_resource_meta.append(resource_meta)
+                break
+    print_resource_table(delete_resource_meta)
+
+    print('确认删除 [y/n]: ', end='')
+    choice = ''
+    while choice != 'y' and choice != 'n':
+        choice = input()
+
+    if choice == 'y':
+        for resource in delete_list:
+            import shutil
+            print(os.path.join(get_resource_path(resource_type), resource))
+            # shutil.rmtree(os.path.join(get_resource_path(resource), res))
+        rprint('[green]删除成功！[/green]')
 
 
 def get_resource_path(resource: str) -> str:

@@ -1,7 +1,7 @@
 import sys
 from llm.base_llm import BaseLLM
 from utils.render import print_markdown, print_markdown_stream
-from utils.resource import get_resource, print_resource_table, ResourceType
+from utils.resource import delete_resource, get_resource, print_resource_table, ResourceType
 from utils.context import load_context, save_context, print_messages, load_previous, save_previous
 from rich import print as rprint
 from argparse import Namespace
@@ -101,8 +101,10 @@ def setting_args_parse(args: Namespace):
         create_template()
         sys.exit()
     elif args.deletetemplate:
-        from utils.templates import delete_template
-        delete_template(args.deletetemplate)
+        delete_resource(ResourceType.templates, args.deletetemplate)
+        sys.exit()
+    elif args.deletetool:
+        delete_resource(ResourceType.tool, args.deletetool)
         sys.exit()
     elif args.showtemplate:
         template = get_resource(ResourceType.templates, args.showtemplate[0])
