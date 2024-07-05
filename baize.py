@@ -106,6 +106,10 @@ def setting_args_parse(args: Namespace):
     elif args.deletetool:
         delete_resource(ResourceType.tool, args.deletetool)
         sys.exit()
+    elif args.createtool:
+        from utils.tool.tool import create_tool
+        create_tool()
+        sys.exit()
     elif args.showtemplate:
         template = get_resource(ResourceType.templates, args.showtemplate[0])
         print_markdown(template)

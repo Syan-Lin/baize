@@ -57,7 +57,7 @@ def create_template():
                 'describe': template_describe,
                 'author': author,
                 'date': date,
-            }, f)
+            }, f, ensure_ascii=False)
         with open(os.path.join(new_template_path, 'prompt.md'), 'w', encoding='utf-8') as f:
             f.write(template_content)
         info = f'模板创建成功！保存在目录 {new_template_path}'
