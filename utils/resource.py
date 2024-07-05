@@ -63,8 +63,7 @@ def delete_resource(resource_type: str, delete_names: list[str]):
     if choice == 'y':
         for resource in delete_list:
             import shutil
-            print(os.path.join(get_resource_path(resource_type), resource))
-            # shutil.rmtree(os.path.join(get_resource_path(resource), res))
+            shutil.rmtree(os.path.join(get_resource_path(resource_type), resource))
         rprint('[green]删除成功！[/green]')
 
 
