@@ -281,9 +281,36 @@ def test_workflow():
     chat = pexpect.spawn(f'{python_path} {baize_path} -w test --log')
     check(chat, 'workflow + log')
 
+CODE = """
+def print_test(name: str):
+    # 打印
+    # name: 名字
+    print(name)
+"""
 
 def test_tool():
     console.print(Markdown('# Tool Test'))
+
+    # tool create
+    chat = pexpect.spawn(f'{python_path} {baize_path} --createtool')
+    pyperclip.copy(CODE)
+    chat.expect('.')
+    chat.sendline()
+    chat.expect(':')
+    chat.sendline('test_tool')
+    chat.expect(':')
+    chat.sendline('test_tool')
+    chat.expect(':')
+    chat.sendline('test_tool')
+    chat.expect(':')
+    chat.sendline('y')
+    check(chat, 'tool create')
+
+    # tool delete
+    chat = pexpect.spawn(f'{python_path} {baize_path} --deletetool test_tool')
+    chat.expect(':')
+    chat.sendline('y')
+    check(chat, 'tool delete')
 
     # tool
     chat = pexpect.spawn(f'{python_path} {baize_path} --tool interpreter')
