@@ -238,6 +238,15 @@ grep [options] pattern [file...]
 `grep -n "name" main.py` 是否执行 [y/n]:
 ```
 
+除了调用命令之外，baize 还支持 shell 的快捷键，目前支持 zsh 和 bash，在经过 `--init` 配置之后即可使用，快捷键为 `Ctrl + B`
+
+```bash
+# 直接输入问题
+在 main.py 文件中找到字符串 name，并打印出行号
+# 按下快捷键 Ctrl + B
+grep -n 'name' main.py
+```
+
 ## 工具模式
 工具模式基于 function call，使 baize 具有一定 Agent 能力，例如调用一些预定义的接口，如数学计算、Code Interpreter、天气查询等。使 baize 可以执行现实中的动作，帮助我们解决一些简单的实际问题。考虑到目前各家大模型 Agent 的能力差异较大，需要能力较强的大模型才能很好地执行工具模式
 
