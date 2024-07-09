@@ -6,7 +6,23 @@ from utils.resource import get_root_path
 
 console = Console()
 
-def append_path(bash_file: str):
+ZSH_KEY_CONFIG = '''
+baize_cli() {
+    if [[ -n "$READLINE_LINE" ]]; then
+        BUFFER=$(baize --clikey "${BUFFER}")
+        CURSOR=$#BUFFER
+        zle reset-prompt
+    fi
+}
+zle -N baize_cli
+bindkey '^B' baize_cli
+'''
+
+# TODO
+BASH_KEY_CONFIG = '''
+'''
+
+def append_path(bash: str, bash_file: str):
     file_path = os.path.expanduser(f'~/{bash_file}')
 
     if not os.path.exists(file_path):
@@ -14,16 +30,22 @@ def append_path(bash_file: str):
         return
 
     baize_path = get_root_path()
-    append_line = f'# Created by baize\nexport PATH="$PATH:{baize_path}"'
+    append_content = '# <<< Created by baize <<< \n'
+    append_content += f'export PATH="$PATH:{baize_path}\n"'
+    if bash == 'zsh':
+        append_content += ZSH_KEY_CONFIG
+    elif bash == 'bash':
+        append_content += BASH_KEY_CONFIG
+    append_content += '# >>> Created by baize >>> \n'
 
     with open(file_path, 'r') as f:
         file_content = f.read()
-    if append_line not in file_content:
+    if '# <<< Created by baize <<<' not in file_content:
         with open(file_path, 'a') as f:
-            f.write(append_line + '\n')
-        rprint(f'路径已写入: {file_path}，请重启终端')
+            f.write(append_content)
+        rprint(f'配置已写入: {file_path}，请重启终端')
     else:
-        rprint(f'路径在 {file_path} 已存在，退出...')
+        rprint(f'配置在 {file_path} 已存在，退出...')
 
 
 def init_env(bash: str):
@@ -32,16 +54,16 @@ def init_env(bash: str):
 
     if system_name == 'Linux':
         if bash == 'bash':
-            append_path('.bashrc')
+            append_path(bash, '.bashrc')
         elif bash == 'zsh':
-            append_path('.zshrc')
+            append_path(bash, '.zshrc')
         else:
             raise NotImplementedError(f'不支持的Shell: {bash}')
     elif system_name == 'Darwin':
         if bash == 'bash':
-            append_path('.bash_profile')
+            append_path(bash, '.bash_profile')
         elif bash == 'zsh':
-            append_path('.zshrc')
+            append_path(bash, '.zshrc')
         else:
             raise NotImplementedError(f'不支持的Shell: {bash}')
     else:
