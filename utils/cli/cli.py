@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 from rich import print as rprint
@@ -8,16 +9,21 @@ from utils.resource import get_resource, ResourceType
 from utils.context import print_messages
 
 
+SYSTEM_PROMPT = f'用户当前使用的是 {os.getenv('SHELL')}，请你基于当前 shell 进行命令生成和分析'
+
+
 def remove_wrapper(message: str):
     message = message.strip()
-    if message.startswith('```bash'):
-        message = message.replace('```bash', '', 1)
-        message = message[:-3]
-    message = message.strip()
     lines = message.splitlines()
-    if len(lines) > 1:
+    if len(lines) == 1:
+        message = lines[0].strip()
+    elif len(lines) == 3:
+        message = lines[1].strip()
+    else:
         rprint(f'[red]错误：返回包含多行输入，无法构建命令[/red]\n{message}')
         sys.exit()
+    if message.startswith('`'):
+        message = message[1:-1]
     return message
 
 
@@ -34,7 +40,7 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
         input_prompt = args.prompt + ['\n'] + input_prompt
 
     from utils.templates import expand_prompt
-    messages = []
+    messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
     template = get_resource(ResourceType.templates, 'cli_mode')
     template_format = template + '\n' + expand_prompt(input_prompt)
     user_message = {'role': 'user', 'content': template_format}
@@ -44,7 +50,7 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
 
 
 def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
-    messages = []
+    messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
     template = get_resource(ResourceType.templates, 'cli_explain')
     template_format = template + '\n' + cli_command
     user_message = {'role': 'user', 'content': template_format}
