@@ -107,7 +107,7 @@ def tool_main(args: Namespace, llm: BaseLLM):
     # function call
     messages = [{'role': 'system', 'content': sys_prompt}]
 
-    rprint('[green]（工具模式中输入 `/q` 退出）[/green]', end='')
+    rprint('[green]（工具模式中输入 `/q` 退出）[/green]')
     while True:
         print('> ', end='')
         prompt = input()
