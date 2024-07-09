@@ -5,7 +5,7 @@
             "type": "function",
             "function": {
                 "name": "exec_code",
-                "description": "执行 pyhon 代码，并返回执行结果",
+                "description": "执行 pyhon 代码，返回其中 print 函数输出的结果",
                 "parameters": {
                     "type": "object",
                     "properties": {
