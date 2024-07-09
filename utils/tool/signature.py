@@ -82,10 +82,11 @@ def get_function_signatures(source_code) -> list[dict]:
                 signature['function']['parameters']['type'] = 'object'
 
                 default_values = get_default_value(source_code, function)
-                signature['required'] = []
+                signature['function']['parameters']['required'] = []
                 for i in range(len(function.args.args) - len(default_values)):
-                    signature['required'].append(function.args.args[i].arg)
+                    signature['function']['parameters']['required'].append(function.args.args[i].arg)
 
+            signature['function']['parameters']['properties'] = {}
             for i, arg in enumerate(function.args.args):
                 arg_name = arg.arg
                 try:
@@ -93,12 +94,12 @@ def get_function_signatures(source_code) -> list[dict]:
                 except:
                     rprint(f'[red]错误: 函数 {function.name} 的参数 {arg_name} 需要标注类型！[/red]')
                     sys.exit()
-                signature['function']['parameters'][arg_name] = {
+                signature['function']['parameters']['properties'][arg_name] = {
                     'type': arg_type,
                     'description': args_description[i],
                 }
                 if arg_type in enums.keys():
-                    signature['function']['parameters'][arg_name]['enum'] = enums[arg_type]
+                    signature['function']['parameters']['properties'][arg_name]['enum'] = enums[arg_type]
             function_signatures.append(signature)
 
     return function_signatures
