@@ -255,7 +255,7 @@ def main() -> None:
     # 模型参数
     llm = config_model(args)
 
-    if args.cli or args.clidetail:
+    if args.cli or args.clidetail or args.clikey:
         # 命令行模式
         from utils.cli.cli import cli_main
         cli_main(args, llm)

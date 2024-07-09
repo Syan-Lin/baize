@@ -9,7 +9,16 @@ from utils.context import print_messages
 
 
 def remove_wrapper(message: str):
-    return message.strip().strip('```bash').strip('```').strip()
+    message = message.strip()
+    if message.startswith('```bash'):
+        message = message.replace('```bash', '', 1)
+        message = message[:-3]
+    message = message.strip()
+    lines = message.splitlines()
+    if len(lines) > 1:
+        rprint(f'[red]错误：返回包含多行输入，无法构建命令[/red]\n{message}')
+        sys.exit()
+    return message
 
 
 def make_cli_prompt(args: Namespace) -> list[dict]:
@@ -46,7 +55,12 @@ def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
 
 def cli_main(args: Namespace, llm: BaseLLM):
     messages = make_cli_prompt(args)
-    cli_command = remove_wrapper(llm.message(messages))
+    resp = llm.message(messages)
+    cli_command = remove_wrapper(resp)
+    if args.clikey:
+        print(cli_command)
+        sys.exit()
+
     messages.append({'role': 'assistant', 'content': cli_command})
 
     stream = False
