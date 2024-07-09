@@ -18,8 +18,14 @@ zle -N baize_cli
 bindkey '^B' baize_cli
 '''
 
-# TODO
 BASH_KEY_CONFIG = '''
+baize_cli() {
+    if [[ -n "$READLINE_LINE" ]]; then
+        READLINE_LINE=$(baize --clikey "$READLINE_LINE")
+        READLINE_POINT=${#READLINE_LINE}
+    fi
+}
+bind -x '"\C-b":baize_cli'
 '''
 
 def append_path(bash: str, bash_file: str):
