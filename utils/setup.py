@@ -30,8 +30,8 @@ def append_path(bash: str, bash_file: str):
         return
 
     baize_path = get_root_path()
-    append_content = '# <<< Created by baize <<< \n'
-    append_content += f'export PATH="$PATH:{baize_path}\n"'
+    append_content = '\n# <<< Created by baize <<< \n'
+    append_content += f'export PATH="$PATH:{baize_path}"\n'
     if bash == 'zsh':
         append_content += ZSH_KEY_CONFIG
     elif bash == 'bash':
