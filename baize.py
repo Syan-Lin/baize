@@ -259,7 +259,7 @@ def main() -> None:
         # 命令行模式
         from utils.cli.cli import cli_main
         cli_main(args, llm)
-    elif args.workflow:
+    elif args.workflow or args.showworkflow:
         # 工作流模式
         from utils.workflow.workflow import workflow_main
         workflow_main(args)
