@@ -20,6 +20,9 @@ class Node(ABC):
     def output(self) -> dict:
         raise NotImplementedError
 
+    def add_input(self, node):
+        self.input.append(node)
+
 
     def enable_debug(self):
         self.debug = True
@@ -28,6 +31,13 @@ class Node(ABC):
     def debug_output(self, output: dict):
         if self.debug:
             rprint(f'节点 [green]{self.name}[/green] 输出: {output}')
+
+
+class EmptyNode(Node):
+    def __init__(self, name: str):
+        super().__init__(name, "empty")
+    def output(self) -> dict:
+        raise NotImplementedError
 
 
 def make_input_node(name: str, config: dict) -> Node:
@@ -126,10 +136,6 @@ class LLMNode(Node):
         self.response = {}
 
 
-    def add_input(self, input: Node):
-        self.input.append(input)
-
-
     def output(self) -> dict:
         if len(self.response) > 0:
             return self.response
@@ -193,10 +199,6 @@ class OutputNode(Node):
     def __init__(self, name: str, to: str):
         super().__init__(name, 'output')
         self.to = to
-
-
-    def add_input(self, input: Node):
-        self.input.append(input)
 
 
     def output(self) -> dict:
@@ -265,10 +267,6 @@ class ScriptNode(Node):
         else:
             self.script_path = script_path
         self.function = function
-
-
-    def add_input(self, input: Node):
-        self.input.append(input)
 
 
     def generate_code(self) -> str:

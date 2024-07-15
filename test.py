@@ -281,6 +281,32 @@ def test_workflow():
     chat = pexpect.spawn(f'{python_path} {baize_path} -w test --log')
     check(chat, 'workflow + log')
 
+
+from utils.workflow.graph import Graph, print_graph
+from utils.workflow.node import *
+def workflow_unit_test():
+    graph = Graph()
+    node1 = EmptyNode('node1')
+    node2 = EmptyNode('node2')
+    node3 = EmptyNode('node3')
+
+    graph.add_node(node1)
+    graph.add_node(node2)
+    graph.add_node(node3)
+
+    graph.edge('node1', 'node2')
+    graph.edge('node2', 'node3')
+    print_graph(graph)
+    graph.check_loop()
+    graph.edge('node3', 'node1')
+    graph.remove_edge('node3', 'node1')
+    print_graph(graph)
+    graph.check_loop()
+    graph.edge('node3', 'node1')
+    graph.del_node('node3')
+    print_graph(graph)
+    assert(graph.get_node('node1') == node1)
+
 CODE = """
 def print_test(name: str):
     # 打印
@@ -354,6 +380,8 @@ if __name__ == "__main__":
 
     print(f'python_path: {python_path}')
     print(f'baize_path:  {baize_path}')
+
+    workflow_unit_test()
 
     test_settings()
     chat = pexpect.spawn(f'{python_path} {baize_path} --set test')
