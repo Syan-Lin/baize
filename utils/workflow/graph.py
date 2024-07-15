@@ -11,38 +11,6 @@ from utils.workflow.node import (
 )
 
 
-def init_graph(workflow_config: dict, debug: bool):
-    graph = Graph()
-    for name, config in workflow_config.items():
-        if config['type'] == 'input':
-            node = make_input_node(name, config)
-        elif config['type'] == 'llm':
-            node = make_llm_node(name, config)
-        elif config['type'] == 'script':
-            node = make_script_node(name, config)
-        elif config['type'] == 'output':
-            node = make_output_node(name, config)
-        else:
-            rprint(f'[red]错误: 节点 {name} 类型错误，不存在类型 {config['type']}[/red]')
-            sys.exit()
-        if debug:
-            node.enable_debug()
-        graph.add_node(node)
-
-    for name, config in workflow_config.items():
-        if 'input' not in config:
-            continue
-        for input_node in config['input']:
-            if graph.get_node(input_node) is None:
-                rprint(f'[red]错误: 节点 {name} 的输入节点 [red]{input_node}[/red] 不存在！[/red]')
-                sys.exit()
-            graph.edge(input_node, name)
-
-    graph.check_loop()
-
-    return graph
-
-
 class Graph:
     def __init__(self):
         self.nodes = []
@@ -52,11 +20,7 @@ class Graph:
     def edge(self, from_node_name: str, to_node_name: str):
         from_node = self.get_node(from_node_name)
         to_node = self.get_node(to_node_name)
-        if from_node is None:
-            rprint(f'[red]错误: 节点 {from_node_name} 不存在！[/red]')
-            return
-        if to_node is None:
-            rprint(f'[red]错误: 节点 {to_node_name} 不存在！[/red]')
+        if from_node is None or to_node is None:
             return
         to_node.add_input(from_node)
 
@@ -64,11 +28,7 @@ class Graph:
     def remove_edge(self, from_node_name: str, to_node_name: str):
         from_node = self.get_node(from_node_name)
         to_node = self.get_node(to_node_name)
-        if from_node is None:
-            rprint(f'[red]错误: 节点 {from_node_name} 不存在！[/red]')
-            return
-        if to_node is None:
-            rprint(f'[red]错误: 节点 {to_node_name} 不存在！[/red]')
+        if from_node is None or to_node is None:
             return
         if from_node in to_node.input:
             to_node.input.remove(from_node)
@@ -92,7 +52,7 @@ class Graph:
         for node in self.nodes:
             if node.name == name:
                 return node
-        rprint(f'[red]错误: 节点 {name} 不存在[/red]')
+        rprint(f'[red]错误: 节点 {name} 不存在！[/red]')
         return None
 
 
@@ -163,3 +123,39 @@ def graph2ascii(graph: Graph):
 def print_graph(graph: Graph):
     ascii = graph2ascii(graph)
     print(ascii)
+
+
+def init_graph(workflow_config: dict, debug: bool):
+    graph = Graph()
+    for name, config in workflow_config.items():
+        if config['type'] == 'input':
+            node = make_input_node(name, config)
+        elif config['type'] == 'llm':
+            node = make_llm_node(name, config)
+        elif config['type'] == 'script':
+            node = make_script_node(name, config)
+        elif config['type'] == 'output':
+            node = make_output_node(name, config)
+        else:
+            rprint(f'[red]错误: 节点 {name} 类型错误，不存在类型 {config['type']}[/red]')
+            sys.exit()
+        if debug:
+            node.enable_debug()
+        graph.add_node(node)
+
+    for name, config in workflow_config.items():
+        if 'input' not in config:
+            continue
+        for input_node in config['input']:
+            if graph.get_node(input_node) is None:
+                rprint(f'[red]错误: 节点 {name} 的输入节点 [red]{input_node}[/red] 不存在！[/red]')
+                sys.exit()
+            graph.edge(input_node, name)
+
+    graph.check_loop()
+
+    return graph
+
+
+def graph2config(graph: Graph):
+    pass
