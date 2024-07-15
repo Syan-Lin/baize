@@ -54,6 +54,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('-w', '--workflow', nargs=1, metavar='<workflow name>', help='执行 Workflow')
     parser.add_argument('--showworkflow', nargs=1, metavar='<workflow name>', help='查看 Workflow')
     parser.add_argument('--workflowlist', action='store_true', help='查看现有 Workflow 列表')
+    parser.add_argument('--createworkflow', action='store_true', help='创建 Workflow')
 
     args = parser.parse_args()
 
