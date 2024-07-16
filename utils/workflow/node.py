@@ -14,6 +14,10 @@ class Node(ABC):
         self.type = type
         self.debug = False
         self.input = []
+        self.config = {
+            'type': type,
+            'input': []
+        }
 
 
     @abstractmethod
@@ -22,6 +26,13 @@ class Node(ABC):
 
     def add_input(self, node):
         self.input.append(node)
+        self.config['input'].append(node.name)
+
+
+    def del_input(self, node):
+        if node in self.input:
+            self.input.remove(node)
+            self.config['input'].remove(node.name)
 
 
     def enable_debug(self):
@@ -50,6 +61,8 @@ class InputNode(Node):
         super().__init__(name, "input")
         self.input_dict = input_dict
         self.param = {}
+
+        self.config['output'] = input_dict
 
 
     def output(self) -> dict:
@@ -135,6 +148,11 @@ class LLMNode(Node):
         self.system_prompt = system_prompt
         self.response = {}
 
+        self.config['system'] = system_prompt
+        self.config['template'] = template
+        self.config['content'] = content
+        self.config['output'] = output_param
+
 
     def output(self) -> dict:
         if len(self.response) > 0:
@@ -199,6 +217,8 @@ class OutputNode(Node):
     def __init__(self, name: str, to: str):
         super().__init__(name, 'output')
         self.to = to
+
+        self.config['to'] = to
 
 
     def output(self) -> dict:
@@ -267,6 +287,10 @@ class ScriptNode(Node):
         else:
             self.script_path = script_path
         self.function = function
+
+        self.config['script'] = script_path
+        self.config['function'] = function
+        self.config['output'] = output_param
 
 
     def generate_code(self) -> str:

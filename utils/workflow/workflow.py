@@ -1,10 +1,11 @@
+import os
 import sys
 import json
 import pyperclip
 from rich import print as rprint
 from argparse import Namespace
 from utils.workflow.graph import init_graph, Graph, print_graph, graph2config
-from utils.resource import get_resource, ResourceType
+from utils.resource import get_resource, ResourceType, print_resource_table, get_resource_path
 from utils.setup import input_param
 from utils.workflow.node import (
     make_input_node,
@@ -28,9 +29,9 @@ def init_input_config():
         param_name = input_param('参数名')
         content = input_param('content（默认表示使用时输入）', True)
         if content is None:
-            input_params['output'][param_name] = {}
+            input_params['output'][param_name] = {'content': content}
         else:
-            input_params['output'][param_name] = parse_paste(content)
+            input_params['output'][param_name] = {'content': parse_paste(content)}
     return input_params
 
 
@@ -106,6 +107,48 @@ def add_node(graph: Graph, command: str):
     return graph
 
 
+def save_workflow(workflow_config: dict):
+    workflow_name = input_param('Workflow 名称')
+    workflow_describe = input_param('Workflow 描述', skip=True)
+    author = input_param('作者', skip=True)
+    from datetime import datetime
+    date = datetime.now().strftime('%Y-%m-%d')
+
+    rprint('\n[blue]模板元信息[/blue]: ')
+
+    workflow_list = [{
+        'name': workflow_name,
+        'describe': workflow_describe,
+        'author': author,
+        'date': date,
+    }]
+
+    print_resource_table(workflow_list)
+
+    choice = ''
+    while choice != 'y' and choice != 'n':
+        print('确认保存 [y/n]: ', end='')
+        choice = input()
+
+    if choice == 'y':
+        workflow_root_path = get_resource_path(ResourceType.workflow)
+        new_workflow_path = os.path.join(workflow_root_path, workflow_name)
+        if os.path.exists(new_workflow_path):
+            rprint('[red]错误: Workflow 已存在，无法创建！[/red]')
+            return
+        os.makedirs(new_workflow_path)
+        with open(os.path.join(new_workflow_path, 'meta.json'), 'w', encoding='utf-8') as f:
+            json.dump({
+                'describe': workflow_describe,
+                'author': author,
+                'date': date,
+            }, f, ensure_ascii=False)
+        with open(os.path.join(new_workflow_path,'workflow.json'), 'w', encoding='utf-8') as f:
+            json.dump(workflow_config, f, ensure_ascii=False)
+        info = f'Workflow 创建成功！保存在目录 {new_workflow_path}'
+        rprint('[green]' + info + '[/green]')
+
+
 def create_workflow():
     from utils.workflow.node import EmptyNode
     workflow = Graph()
@@ -135,7 +178,9 @@ def create_workflow():
             workflow.remove_edge(command[1], command[2])
             workflow.remove_edge(command[2], command[1])
         elif command[0] == '/save':
-            graph2config(workflow)
+            workflow.del_node('root')
+            print(len(workflow.nodes))
+            save_workflow(graph2config(workflow))
         elif command[0] == '/show':
             print_graph(workflow)
         elif command[0] == '/h':
