@@ -25,11 +25,12 @@ class Node(ABC):
         raise NotImplementedError
 
     def add_input(self, node):
-        self.input.append(node)
-        self.config['input'].append(node.name)
+        if node not in self.input:
+            self.input.append(node)
+            self.config['input'].append(node.name)
 
 
-    def del_input(self, node):
+    def remove_input(self, node):
         if node in self.input:
             self.input.remove(node)
             self.config['input'].remove(node.name)

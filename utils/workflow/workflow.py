@@ -44,7 +44,7 @@ def init_llm_config():
 
     if template is None and content is None:
         rprint(f'[red]错误: 需要模板或 Prompt 参数[/red]')
-        sys.exit()
+        return
 
     llm_config = {}
     if config is not None:
@@ -165,7 +165,7 @@ def create_workflow():
             if len(command) > 2:
                 rprint(f'[red]错误: 节点创建格式为: /delnode <name>[/red]')
                 return
-            workflow.del_node(command[1])
+            workflow.remove_node(command[1])
         elif command[0] == '/edge':
             if len(command) > 3:
                 rprint(f'[red]错误: 节点创建格式为: /edge <from_node> <to_node>[/red]')
@@ -178,7 +178,7 @@ def create_workflow():
             workflow.remove_edge(command[1], command[2])
             workflow.remove_edge(command[2], command[1])
         elif command[0] == '/save':
-            workflow.del_node('root')
+            workflow.remove_node('root')
             print(len(workflow.nodes))
             save_workflow(graph2config(workflow))
         elif command[0] == '/show':

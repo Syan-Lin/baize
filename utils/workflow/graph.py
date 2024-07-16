@@ -30,7 +30,7 @@ class Graph:
         to_node = self.get_node(to_node_name)
         if from_node is None or to_node is None:
             return
-        to_node.del_input(from_node)
+        to_node.remove_input(from_node)
 
 
     def add_node(self, node: Node):
@@ -55,7 +55,7 @@ class Graph:
         return None
 
 
-    def del_node(self, name: str):
+    def remove_node(self, name: str):
         dnode = None
         for node in self.nodes:
             if node.name == name:
@@ -157,7 +157,7 @@ def init_graph(workflow_config: dict, debug: bool):
 
 def graph2config(graph: Graph) -> dict:
     config = {}
-    graph.del_node('root')
+    graph.remove_node('root')
     for node in graph.nodes:
         config[node.name] = node.config
     return config
