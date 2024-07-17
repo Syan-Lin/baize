@@ -9,6 +9,14 @@ class ResourceType:
     tool = 'tool'
 
 
+def parse_paste(input: str):
+    import pyperclip
+    input = input.strip()
+    if input == '/p':
+        return pyperclip.paste()
+    return input
+
+
 def get_root_path() -> str:
     user_home = os.path.expanduser('~')
     root_path = os.path.join(user_home, '.baize')

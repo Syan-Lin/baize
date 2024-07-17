@@ -1,11 +1,10 @@
 import os
 import sys
 import json
-import pyperclip
 from rich import print as rprint
 from argparse import Namespace
 from utils.workflow.graph import init_graph, Graph, print_graph, graph2config
-from utils.resource import get_resource, ResourceType, print_resource_table, get_resource_path
+from utils.resource import get_resource, ResourceType, print_resource_table, get_resource_path, parse_paste
 from utils.setup import input_param
 from utils.workflow.node import (
     make_input_node,
@@ -13,13 +12,6 @@ from utils.workflow.node import (
     make_output_node,
     make_script_node
 )
-
-
-def parse_paste(input: str):
-    input = input.strip()
-    if input == '/p':
-        return pyperclip.paste()
-    return input
 
 
 def init_input_config():
