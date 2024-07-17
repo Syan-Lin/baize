@@ -12,11 +12,16 @@ def expand_prompt(input_prompt: list[str]) -> str:
     return prompt
 
 
-def create_template():
-    import pyperclip
-    rprint('准备开始创建模板，模板内容会自动从剪贴板获取，请确保 [green]剪贴板中已经复制[/green] 了模板内容，程序在输入任意键后开始...', end='')
-    input()
-    template_content = pyperclip.paste()
+def create_template(path: str):
+    if path == '__default__':
+        import pyperclip
+        rprint('准备开始创建模板，模板内容会自动从剪贴板获取，请确保 [green]剪贴板中已经复制[/green] 了模板内容，程序在输入任意键后开始...', end='')
+        input()
+        template_content = pyperclip.paste()
+    else:
+        with open(path, 'r', encoding='utf-8') as f:
+            template_content = f.read()
+
     rprint('请输入 [green]模板名称[/green]: ', end='')
     template_name = input()
     rprint('请用 [green]一句话[/green] 描述模板: ', end='')

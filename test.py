@@ -303,7 +303,7 @@ def workflow_unit_test():
     print_graph(graph)
     graph.check_loop()
     graph.edge('node3', 'node1')
-    graph.del_node('node3')
+    graph.remove_node('node3')
     print_graph(graph)
     assert(graph.get_node('node1') == node1)
 

@@ -98,7 +98,7 @@ def setting_args_parse(args: Namespace):
         sys.exit()
     elif args.createtemplate:
         from utils.templates import create_template
-        create_template()
+        create_template(args.createtemplate)
         sys.exit()
     elif args.deletetemplate:
         delete_resource(ResourceType.templates, args.deletetemplate)
