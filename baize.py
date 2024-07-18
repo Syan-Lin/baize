@@ -136,19 +136,22 @@ def setting_args_parse(args: Namespace):
 
 def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     # Prompt 输入
+    formatter = {
+        'sysin': '',
+        'paste': '',
+        'input': ''
+    }
     input_prompt = []
     if args.paste:
         import pyperclip
-        input_prompt = ['\n' + pyperclip.paste()]
-        if args.prompt:
-            input_prompt = args.prompt + input_prompt
-    else:
-        if not sys.stdin.isatty():
-            input_prompt = ['\n' + sys.stdin.read()]
-        if args.prompt:
-            input_prompt = args.prompt + input_prompt
+        formatter['paste'] = pyperclip.paste()
+    if not sys.stdin.isatty():
+        formatter['sysin'] = sys.stdin.read()
+    if args.prompt:
+        from utils.templates import expand_prompt
+        formatter['input'] = expand_prompt(args.prompt)
 
-    if len(input_prompt) == 0:
+    if formatter['sysin'] == '' and formatter['input'] == '' and formatter['paste'] == '':
         rprint('[red]错误: 未输入任何内容！[/red]')
         sys.exit()
     messages = []
@@ -169,18 +172,19 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     if args.template:
         template = get_resource(ResourceType.templates, args.template[0])
 
-    from utils.templates import expand_prompt
     if template is None:
-        user_message = {'role': 'user', 'content': expand_prompt(input_prompt)}
+        prompt = formatter['input']
+        if formatter['paste'] != '':
+            prompt += '\n' + formatter['paste']
+        if formatter['sysin'] != '':
+            prompt += '\n' + formatter['sysin']
+        user_message = {'role': 'user', 'content': prompt}
     else:
-        if '{}' not in template:
-            template_format = template + '\n' + expand_prompt(input_prompt)
-        else:
-            format_num = template.count('{}')
-            if len(input_prompt) != format_num:
-                rprint(f'[red]错误: 输入参数数量与模板不一致， Prompt 模板中有 [green]{format_num}[/green] 个参数，而给了 [green]{len(input_prompt)}[/green] 个参数[/red]')
-                sys.exit()
-            template_format = template.format(*input_prompt)
+        try:
+            template_format = template.format(**formatter)
+        except Exception as e:
+            rprint(f'[red]错误: 模板解析错误\n{e}[/red]')
+            sys.exit()
         user_message = {'role': 'user', 'content': template_format}
 
     # 文件引入
