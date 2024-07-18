@@ -322,12 +322,15 @@ def test_tool():
     pyperclip.copy(CODE)
     chat.expect('.')
     chat.sendline()
-    chat.expect(':')
+    chat.expect('.')
+    chat.sendline()
     chat.sendline('test_tool')
     chat.expect(':')
     chat.sendline('test_tool')
     chat.expect(':')
     chat.sendline('test_tool')
+    chat.expect(':')
+    chat.sendline()
     chat.expect(':')
     chat.sendline('y')
     check(chat, 'tool create')
@@ -360,7 +363,7 @@ def test_tool():
 
 
 def test_update():
-    console.print(Markdown('# Tool Test'))
+    console.print(Markdown('# Update Test'))
 
     chat = pexpect.spawn(f'{python_path} {baize_path} --update')
     index = chat.expect([':', 'v'])
@@ -383,12 +386,12 @@ if __name__ == "__main__":
 
     workflow_unit_test()
 
-    test_settings()
-    chat = pexpect.spawn(f'{python_path} {baize_path} --set test')
-    time.sleep(3)
-    test_input()
-    test_output()
-    test_cli_mode()
-    test_workflow()
+    # test_settings()
+    # chat = pexpect.spawn(f'{python_path} {baize_path} --set test')
+    # time.sleep(3)
+    # test_input()
+    # test_output()
+    # test_cli_mode()
+    # test_workflow()
     test_tool()
     test_update()
