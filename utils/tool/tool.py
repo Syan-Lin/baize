@@ -113,6 +113,8 @@ def tool_main(args: Namespace, llm: BaseLLM):
         prompt = input()
         if prompt.lower() == '/q':
             sys.exit()
+        import pyperclip
+        prompt.replace(' /p ', pyperclip.paste())
         user_message = {'role': 'user', 'content': prompt}
         messages.append(user_message)
 
