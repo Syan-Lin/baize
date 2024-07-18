@@ -92,3 +92,4 @@ fix: 防止请求竞争
 - 使用中文回复
 
 # git diff 信息
+{input}{paste}{sysin}
