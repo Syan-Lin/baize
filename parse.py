@@ -40,7 +40,7 @@ def init_parse() -> argparse.Namespace:
     parser.add_argument('-p', '--previous', action='store_true', help='将上次对话记录引入本次对话')
 
     # Prompt 配置
-    parser.add_argument('--createtemplate', nargs="?", const='__default__', help='创建 Prompt Template')
+    parser.add_argument('--createtemplate', nargs="?", metavar='<template path>', const='__default__', type=str, help='创建 Prompt Template')
     parser.add_argument('--deletetemplate', nargs="*", metavar='<template>', type=str, help='删除 Prompt Template')
     parser.add_argument('--showtemplate', nargs=1, metavar='<template>', type=str, help='查看 Prompt Template')
 
