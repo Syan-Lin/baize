@@ -67,7 +67,7 @@ class Graph:
         if dnode in self.nodes:
             self.nodes.remove(dnode)
             for node in self.nodes:
-                node.del_input(dnode)
+                node.remove_input(dnode)
 
 
     def check_loop(self):

@@ -29,31 +29,24 @@ def remove_wrapper(message: str):
 
 def make_cli_prompt(args: Namespace) -> list[dict]:
     # Prompt 输入
-    if not args.prompt and not args.paste:
-        rprint('[red]错误：没有 Prpmpt 输入[/red]')
-        sys.exit(1)
-    input_prompt = []
-    if args.paste:
-        import pyperclip
-        input_prompt = [pyperclip.paste()]
-    if args.prompt:
-        input_prompt = args.prompt + ['\n'] + input_prompt
+    from baize import make_formatter
+    from utils.templates import format_template
+    formatter = make_formatter(args)
 
-    from utils.templates import expand_prompt
     messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
     template = get_resource(ResourceType.templates, 'cli_mode')
-    template_format = template + '\n' + expand_prompt(input_prompt)
-    user_message = {'role': 'user', 'content': template_format}
+    user_message = {'role': 'user', 'content': format_template(formatter, template)}
     messages.append(user_message)
 
     return messages
 
 
 def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
+    from baize import make_formatter
+    from utils.templates import format_template
     messages = [{'role': 'system', 'content': SYSTEM_PROMPT}]
     template = get_resource(ResourceType.templates, 'cli_explain')
-    template_format = template + '\n' + cli_command
-    user_message = {'role': 'user', 'content': template_format}
+    user_message = {'role': 'user', 'content': format_template(make_formatter(args, prompt=cli_command), template)}
     messages.append(user_message)
 
     return messages

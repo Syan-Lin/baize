@@ -345,7 +345,7 @@ def test_tool():
     chat.expect('>')
     chat.sendline('使用牛顿迭代法计算 x^3 = 5 的解')
     chat.expect('>')
-    chat.sendline('q')
+    chat.sendline('/q')
     check(chat, 'tool')
 
     # tool + log
@@ -355,7 +355,7 @@ def test_tool():
     chat.expect('>')
     chat.sendline('现在的时间是什么时候？')
     chat.expect('>')
-    chat.sendline('q')
+    chat.sendline('/q')
     check(chat, 'tool + log')
 
 

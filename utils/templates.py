@@ -5,6 +5,23 @@ from rich import print as rprint
 from utils.resource import print_resource_table, get_resource_path, get_resource_list, ResourceType
 
 
+def format_template(formatter: str, template: str | None) -> str:
+    if template is None:
+        prompt = formatter['input']
+        if formatter['paste'] != '':
+            prompt += '\n' + formatter['paste']
+        if formatter['sysin'] != '':
+            prompt += '\n' + formatter['sysin']
+    else:
+        try:
+            prompt = template.format(**formatter)
+        except Exception as e:
+            import sys
+            rprint(f'[red]错误: 模板解析错误\n{e}[/red]')
+            sys.exit()
+    return prompt
+
+
 def expand_prompt(input_prompt: list[str]) -> str:
     prompt = ''
     for seg in input_prompt:

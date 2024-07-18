@@ -134,26 +134,30 @@ def setting_args_parse(args: Namespace):
         sys.exit()
 
 
-def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
-    # Prompt 输入
+def make_formatter(args: Namespace, paste='', sysin='', prompt=''):
     formatter = {
-        'sysin': '',
-        'paste': '',
-        'input': ''
+        'sysin': sysin,
+        'paste': paste,
+        'input': prompt
     }
-    input_prompt = []
-    if args.paste:
+    if paste == '' and args.paste:
         import pyperclip
         formatter['paste'] = pyperclip.paste()
-    if not sys.stdin.isatty():
+    if sysin == '' and not sys.stdin.isatty():
         formatter['sysin'] = sys.stdin.read()
-    if args.prompt:
+    if prompt == '' and args.prompt:
         from utils.templates import expand_prompt
         formatter['input'] = expand_prompt(args.prompt)
 
     if formatter['sysin'] == '' and formatter['input'] == '' and formatter['paste'] == '':
         rprint('[red]错误: 未输入任何内容！[/red]')
         sys.exit()
+    return formatter
+
+
+def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
+    # Prompt 输入
+    formatter = make_formatter(args)
     messages = []
 
     # 历史对话引入
@@ -172,20 +176,8 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     if args.template:
         template = get_resource(ResourceType.templates, args.template[0])
 
-    if template is None:
-        prompt = formatter['input']
-        if formatter['paste'] != '':
-            prompt += '\n' + formatter['paste']
-        if formatter['sysin'] != '':
-            prompt += '\n' + formatter['sysin']
-        user_message = {'role': 'user', 'content': prompt}
-    else:
-        try:
-            template_format = template.format(**formatter)
-        except Exception as e:
-            rprint(f'[red]错误: 模板解析错误\n{e}[/red]')
-            sys.exit()
-        user_message = {'role': 'user', 'content': template_format}
+    from utils.templates import format_template
+    user_message = {'role': 'user', 'content': format_template(formatter, template)}
 
     # 文件引入
     if args.file:
