@@ -292,22 +292,24 @@ get_weather(city="""上海""",date="""2024-06-24""")
 
 ## Prompt 构造
 
-当 Prompt 模板中存在 `{}` 时，会按照输入数量进行格式化，例如：
+Prompt 模板根据 `{<param_name>}` 进行格式化：
+- `{input}`：代表命令的 Prompt 输入
+- `{sysin}`：代表管道连接所获得的输入
+- `{paste}`：代表粘贴命令所获得的输入
 
-```bash
-# example: 我是{}，今年 {} 岁
-# 匹配成：我是小明，今年 3 岁
-baize 小明 3 -t example
+例如：
+```markdown
+这是用户输入：{input}，这是来自管道连接：{sysin}，这是来自粘贴：{paste}。顺序不重要，根据参数名格式化。
 ```
 
-如果正常文本中有 `{}`，请转义成 `{{}}`
+假设剪贴板复制内容为：`粘贴的内容`，输入命令：
+```shell
+echo hello | baize 你好 -P
+```
 
-对于没有 `{}` 的 Prompt 模板，会直接进行顺序拼接，例如：
-
-```bash
-# example: 翻译成中文
-# 匹配成：翻译成英文 \n hello world
-baize hello world -t example
+可以得到格式化的模板：
+```markdown
+这是用户输入：你好，这是来自管道连接：hello，这是来自粘贴：粘贴的内容。顺序不重要，根据参数名格式化。
 ```
 
 ### 设置上下文
@@ -322,19 +324,21 @@ baize --setcontext 我是一个程序员
 ## 工作流模式
 工作流能够自定义一个简单的大模型交互流程，通过 `--workflow -w` 来指定一个预定义的工作流执行。工作流是一个由节点定义的有向无环图的流程结构，其中节点包括「输入节点」、「LLM 节点」、「Python 脚本节点」、「输出节点」，通过将这些节点组合成一个流程来实现一些复杂任务的自动化
 
-> 工作流的交互逻辑待优化，目前仅实现基本功能
+这里以反思模式的 [英译中](https://github.com/andrewyng/translation-agent) 来作为示例
 
 ```bash
-baize -w example
-请输入参数 prompt: 生成一首诗
+baize -w eng2ch
+请输入参数 text:
+The Sapir-Whorf hypothesis asserts that the structure of a language influences its speakers' cognition and worldview. According to this theory, the grammatical and lexical features of a language shape habitual thought patterns and perceptions. For example, how a language conveys concepts such as time, space, and color can affect how its speakers experience these dimensions. Despite ongoing debate and mixed empirical support, this hypothesis remains significant in cognitive science, anthropology, and linguistics. Its implications reach beyond academia, impacting cultural identity, communication, and even artificial intelligence.
 
-秋风起，黄叶飘，
-寂寥世界，诗意渺。
-月挂梢头，霜满地，
-独行人影，长桥倒。
+节点 input_node 执行完毕
+节点 first_trans 执行完毕
+节点 reflection 执行完毕
+节点 improve 执行完毕
+节点 output_node 执行完毕
+
+萨丕尔-沃尔夫假说认为，语言的结构影响其使用者的认知和世界观。根据这一理论，语言的语法和词汇特征塑造了习惯性的思维模式和感知。例如，语言如何表达时间、空间和颜色等概念会影响其使用者对这些维度的体验。尽管存在持续的争论和混合的实证支持，这个假说在认知科学、人类学和语言学中仍然具有重要意义。它的影响超出了学术界，影响到文化认同、沟通，甚至人工智能。
 ```
-
-示例的背后实际上定义了一个并行结构，对于输入的 `prompt`，会有两个「LLM 节点」同时生成一首诗，接着再有一个「LLM 节点」来判断哪一首诗更好，输出更好的那首诗
 
 ## 其他
 你可以使用 `baize --help` 查看所有命令和选项
