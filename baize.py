@@ -7,7 +7,7 @@ from rich import print as rprint
 from argparse import Namespace
 
 # ======版本号====== #
-___VERSION___ = '0.1'
+___VERSION___ = '0.2'
 # ================= #
 
 
