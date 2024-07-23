@@ -41,6 +41,7 @@ class Node(ABC):
 
 
     def debug_output(self, output: dict):
+        rprint(f'节点 [green]{self.name}[/green] 执行完毕')
         if self.debug:
             rprint(f'节点 [green]{self.name}[/green] 输出: {output}')
 
@@ -86,14 +87,15 @@ class InputNode(Node):
                     sys.exit()
             else:
                 rprint(f'请输入参数[green] {param_name} [/green]: ')
-                in_loop = True
                 param_content = ''
-                while in_loop:
+                while True:
+                   from utils.resource import parse_paste
                    user_input = input()
                    if not user_input.endswith('\\'):
-                       in_loop = False
+                       param_content += parse_paste(user_input)
+                       break
                    param_content += user_input[:-1] + '\n'
-                self.param[param_name] = param_content
+                self.param[param_name] = parse_paste(param_content)
 
         self.debug_output(self.param)
         return self.param
