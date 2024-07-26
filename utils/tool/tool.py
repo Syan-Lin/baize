@@ -98,6 +98,7 @@ def get_input() -> str:
         sys.exit()
     import pyperclip
     prompt = prompt.replace('/p', pyperclip.paste())
+    return prompt
 
 
 @log
@@ -136,7 +137,12 @@ def tool_main(args: Namespace, llm: BaseLLM):
     tools = config['tools']
     python = config['python']
     script_path = os.path.join(get_resource_path(ResourceType.tool), args.tool[0], 'tool.py')
-    sys_prompt = os.path.join(get_resource_path(ResourceType.tool), args.tool[0], 'sys.md')
+    sys_prompt_path = os.path.join(get_resource_path(ResourceType.tool), args.tool[0], 'sys.md')
+    if not os.path.exists(sys_prompt_path):
+        rprint(f'[red]错误: 工具 {args.tool[0]} 的系统 Prompt 不存在[/red]')
+        sys.exit()
+    with open(sys_prompt_path, "r", encoding="utf-8") as f:
+        sys_prompt = f.read()
 
     try:
         with open(script_path, 'r', encoding='utf-8') as f:
