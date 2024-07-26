@@ -5,6 +5,7 @@ import subprocess
 from abc import ABC, abstractmethod
 from rich import print as rprint
 from utils.resource import get_resource, ResourceType
+from utils.log import log
 
 
 class Node(ABC):
@@ -40,6 +41,7 @@ class Node(ABC):
         self.debug = True
 
 
+    @log
     def debug_output(self, output: dict):
         rprint(f'节点 [green]{self.name}[/green] 执行完毕')
         if self.debug:

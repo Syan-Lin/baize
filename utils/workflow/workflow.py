@@ -6,6 +6,7 @@ from argparse import Namespace
 from utils.workflow.graph import init_graph, Graph, print_graph, graph2config
 from utils.resource import get_resource, ResourceType, print_resource_table, get_resource_path, parse_paste
 from utils.setup import input_param
+from utils.log import log
 from utils.workflow.node import (
     make_input_node,
     make_llm_node,
@@ -14,6 +15,7 @@ from utils.workflow.node import (
 )
 
 
+@log
 def init_input_config():
     input_params = {'output': {}}
     param_num = int(input_param('参数量'))
@@ -27,6 +29,7 @@ def init_input_config():
     return input_params
 
 
+@log
 def init_llm_config():
     config = input_param('config', True)
     template = input_param('模板', True)
@@ -52,6 +55,7 @@ def init_llm_config():
     return llm_config
 
 
+@log
 def init_script_config():
     script = input_param('脚本路径')
     function = input_param('函数名')
@@ -71,11 +75,13 @@ def init_script_config():
     return script_config
 
 
+@log
 def init_output_config():
     to = input_param('输出到')
     return {'to': parse_paste(to)}
 
 
+@log
 def add_node(graph: Graph, command: str):
     if len(command) > 3:
         rprint(f'[red]错误: 节点创建格式为: /node <type> <name>[/red]')
@@ -99,6 +105,7 @@ def add_node(graph: Graph, command: str):
     return graph
 
 
+@log
 def save_workflow(workflow_config: dict):
     workflow_name = input_param('Workflow 名称')
     workflow_describe = input_param('Workflow 描述', skip=True)

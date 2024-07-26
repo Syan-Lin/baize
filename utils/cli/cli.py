@@ -7,11 +7,13 @@ from llm.base_llm import BaseLLM
 from utils.render import print_markdown
 from utils.resource import get_resource, ResourceType
 from utils.context import print_messages
+from utils.log import log, logging
 
 
 SYSTEM_PROMPT = f'用户当前使用的是 {os.getenv('SHELL')}，请你基于当前 shell 进行命令生成和分析'
 
 
+@log
 def remove_wrapper(message: str):
     message = message.strip()
     lines = message.splitlines()
@@ -27,6 +29,7 @@ def remove_wrapper(message: str):
     return message
 
 
+@log
 def make_cli_prompt(args: Namespace) -> list[dict]:
     # Prompt 输入
     from baize import make_formatter
@@ -41,6 +44,7 @@ def make_cli_prompt(args: Namespace) -> list[dict]:
     return messages
 
 
+@log
 def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
     from baize import make_formatter
     from utils.templates import format_template
@@ -50,6 +54,26 @@ def make_cli_explain(args: Namespace, cli_command: str) -> list[dict]:
     messages.append(user_message)
 
     return messages
+
+
+@log
+def make_cli_explain_resp(args: Namespace, llm: BaseLLM, messages_explain: list[dict]):
+    buffer = ''
+    if args.stream:
+        response = llm.stream_message(messages_explain)
+        for block in response:
+            buffer += block
+            sys.stdout.write(block)
+            sys.stdout.flush()
+    else:
+        response = llm.message(messages_explain)
+        buffer += response
+        if args.markdown:
+            print_markdown(response)
+        else:
+            sys.stdout.write(response)
+            sys.stdout.flush()
+    return buffer
 
 
 def cli_main(args: Namespace, llm: BaseLLM):
@@ -62,27 +86,9 @@ def cli_main(args: Namespace, llm: BaseLLM):
 
     messages.append({'role': 'assistant', 'content': cli_command})
 
-    stream = False
-    if args.stream:
-        stream = True
-
-    buffer = ''
     if args.clidetail:
         messages_explain = make_cli_explain(args, cli_command)
-        if stream:
-            response = llm.stream_message(messages_explain)
-            for block in response:
-                buffer += block
-                sys.stdout.write(block)
-                sys.stdout.flush()
-        else:
-            response = llm.message(messages_explain)
-            buffer += response
-            if args.markdown:
-                print_markdown(response)
-            else:
-                sys.stdout.write(response)
-                sys.stdout.flush()
+        buffer = make_cli_explain_resp(args, llm, messages_explain)
         messages.append({'role': 'assistant', 'content': buffer})
         print()
 

@@ -1,46 +1,15 @@
 import sys
-from llm.base_llm import BaseLLM
+from llm.base_llm import BaseLLM, get_llm
 from utils.render import print_markdown, print_markdown_stream
 from utils.resource import delete_resource, get_resource, print_resource_table, ResourceType
 from utils.context import load_context, save_context, print_messages, load_previous, save_previous
 from rich import print as rprint
 from argparse import Namespace
+from utils.log import log
 
 # ======版本号====== #
 ___VERSION___ = '0.2'
 # ================= #
-
-
-def get_llm(model_name: str, model_config: dict) -> BaseLLM:
-    from utils.config import models_info
-    models = models_info()
-    if model_name in models['qwen']['models']:
-        from llm.qwen import Qwen
-        llm = Qwen(model_name, model_config)
-    elif model_name in models['glm']['models']:
-        from llm.glm import GLM
-        llm = GLM(model_name, model_config)
-    elif model_name in models['deepseek']['models']:
-        from llm.deepseek import DeepSeek
-        llm = DeepSeek(model_name, model_config)
-    elif model_name in models['doubao']['models']:
-        from llm.doubao import DouBao
-        llm = DouBao(model_name, model_config)
-    elif model_name in models['openai']['models']:
-        from llm.openai import GPT
-        llm = GPT(model_name, model_config)
-    elif model_name in models['moonshot']['models']:
-        from llm.moonshot import Moonshot
-        llm = Moonshot(model_name, model_config)
-    elif model_name in models['ollama']['models']:
-        from llm.ollama import Ollama
-        llm = Ollama(model_name, model_config)
-    else:
-        # 自定义模型默认使用 OpenAI API
-        from llm.custom import CustomLLM
-        llm = CustomLLM(model_name, model_config)
-
-    return llm
 
 
 def config_model(args: Namespace):
@@ -204,6 +173,7 @@ def input_args_parse(args: Namespace, llm: BaseLLM) -> list[dict]:
     return messages
 
 
+@log
 def output_parse(args: Namespace, llm: BaseLLM, messages: list[dict]):
     stream = False
     if args.stream:

@@ -1,6 +1,6 @@
 import sys
-import json
 from rich import print as rprint
+from utils.log import log
 from utils.workflow.node import (
     Node,
     OutputNode,
@@ -17,6 +17,7 @@ class Graph:
         self.output_node = None
 
 
+    @log
     def edge(self, from_node_name: str, to_node_name: str):
         from_node = self.get_node(from_node_name)
         to_node = self.get_node(to_node_name)
@@ -25,6 +26,7 @@ class Graph:
         to_node.add_input(from_node)
 
 
+    @log
     def remove_edge(self, from_node_name: str, to_node_name: str):
         from_node = self.get_node(from_node_name)
         to_node = self.get_node(to_node_name)
@@ -33,6 +35,7 @@ class Graph:
         to_node.remove_input(from_node)
 
 
+    @log
     def add_node(self, node: Node):
         for n in self.nodes:
             if n.name == node.name:
@@ -47,6 +50,7 @@ class Graph:
         self.nodes.append(node)
 
 
+    @log
     def get_node(self, name: str) -> Node:
         for node in self.nodes:
             if node.name == name:
@@ -55,6 +59,7 @@ class Graph:
         return None
 
 
+    @log
     def remove_node(self, name: str):
         dnode = None
         for node in self.nodes:
@@ -123,6 +128,7 @@ def print_graph(graph: Graph):
     print(ascii)
 
 
+@log
 def init_graph(workflow_config: dict, debug: bool):
     graph = Graph()
     for name, config in workflow_config.items():
@@ -155,6 +161,7 @@ def init_graph(workflow_config: dict, debug: bool):
     return graph
 
 
+@log
 def graph2config(graph: Graph) -> dict:
     config = {}
     graph.remove_node('root')

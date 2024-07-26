@@ -6,9 +6,10 @@ import subprocess
 from rich import print as rprint
 from argparse import Namespace
 from llm.base_llm import BaseLLM
-from utils.render import print_code
+from utils.render import print_code, print_markdown
 from utils.resource import get_resource, print_resource_table, get_resource_path, ResourceType
 from utils.setup import input_param
+from utils.log import log, logging
 
 
 CODE_TEMPLATE = '''
@@ -89,6 +90,45 @@ def create_tool():
         rprint('[green]' + info + '[/green]')
 
 
+@log
+def get_input() -> str:
+    print('> ', end='')
+    prompt = input()
+    if prompt.lower() == '/q':
+        sys.exit()
+    import pyperclip
+    prompt = prompt.replace('/p', pyperclip.paste())
+
+
+@log
+def make_call(params: dict) -> str:
+    params = json.loads(params)
+    params_str = ''
+    for param, value in params.items():
+        params_str += f'{param}="""{value}""",'
+    params_str = params_str.rstrip(',')
+    return params_str
+
+
+@log
+def call(python: str, custom_code: str, function: str, params_str: str, log: bool) -> str:
+    rprint(f'[blue]正在调用[/blue] [green]`{function}`[/green]')
+    exec_code = CODE_TEMPLATE.format(custom_code=custom_code, function=function, params=params_str)
+    result = subprocess.run([python, "-c", exec_code], capture_output=True, text=True)
+
+    if log:
+        if result.stdout:
+            print_markdown(f'输出: {result.stdout}')
+        if result.stderr:
+            print_markdown(f'错误: {result.stderr}')
+
+    if result.stderr:
+        script_output = result.stderr
+    else:
+        script_output = result.stdout
+    return script_output
+
+
 def tool_main(args: Namespace, llm: BaseLLM):
     # 读取 tools 配置和脚本文件
     config = get_resource(ResourceType.tool, args.tool[0])
@@ -109,13 +149,7 @@ def tool_main(args: Namespace, llm: BaseLLM):
 
     rprint('[green]（工具模式中输入 `/q` 退出）[/green]')
     while True:
-        print('> ', end='')
-        prompt = input()
-        if prompt.lower() == '/q':
-            sys.exit()
-        import pyperclip
-        prompt = prompt.replace('/p', pyperclip.paste())
-        user_message = {'role': 'user', 'content': prompt}
+        user_message = {'role': 'user', 'content': get_input()}
         messages.append(user_message)
 
         while True:
@@ -123,37 +157,16 @@ def tool_main(args: Namespace, llm: BaseLLM):
             make_function_call = function is not None and params is not None and tool_message is not None
             if not make_function_call:
                 break
-            # 构造调用
             messages.append(tool_message)
-            params = json.loads(params)
-            params_str = ''
-            for param, value in params.items():
-                params_str += f'{param}="""{value}""",'
-            params_str = params_str.rstrip(',')
+            params_str = make_call(params)
 
-            from utils.render import print_markdown
             print_markdown(f'```python\n{'{function}({params})'.format(function=function, params=params_str)}\n```')
-
-            rprint(f'[blue]正在调用[/blue] [green]`{function}`[/green]')
-            exec_code = CODE_TEMPLATE.format(custom_code=custom_code, function=function, params=params_str)
-            result = subprocess.run([python, "-c", exec_code], capture_output=True, text=True)
-
-            if args.log:
-                if result.stdout:
-                    print_markdown(f'输出: {result.stdout}')
-                if result.stderr:
-                    print_markdown(f'错误: {result.stderr}')
-
-            if result.stderr:
-                script_output = result.stderr
-            else:
-                script_output = result.stdout
 
             messages.append({
                 "role": "tool",
-                "content": script_output,
+                "content": call(python, custom_code, function, params_str, args.log),
                 "tool_call_id": tool_message['tool_calls'][0]['id']
             })
-
+        logging.info(response)
         rprint(f'[green]{response}[/green]')
         messages.append({'role': 'assistant', 'content': response})

@@ -1,5 +1,8 @@
 import argparse
+from utils.log import log
 
+
+@log
 def init_parse() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='Baize: 将 LLM 集成至你的命令行！')
 
