@@ -27,6 +27,7 @@ class DouBao(BaseLLM):
             top_p=self.model_config.get("top_p"),
             frequency_penalty=self.model_config.get("frequency_penalty"),
             presence_penalty=self.model_config.get("presence_penalty"),
+            reasoning_effort=self.model_config.get("reasoning_effort"),
         )
         return response.choices[0].message.content
 
@@ -39,6 +40,7 @@ class DouBao(BaseLLM):
             top_p=self.model_config.get("top_p"),
             frequency_penalty=self.model_config.get("frequency_penalty"),
             presence_penalty=self.model_config.get("presence_penalty"),
+            reasoning_effort=self.model_config.get("reasoning_effort"),
             stream=True,
         )
         for chunk in response:
@@ -62,6 +64,7 @@ class DouBao(BaseLLM):
             top_p=self.model_config.get("top_p"),
             frequency_penalty=self.model_config.get("frequency_penalty"),
             presence_penalty=self.model_config.get("presence_penalty"),
+            reasoning_effort=self.model_config.get("reasoning_effort"),
             tools=tools,
         )
         response = response.choices[0].message

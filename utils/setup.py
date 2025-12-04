@@ -160,6 +160,8 @@ def setup():
         api_key = input_param('API_KEY')
         endpoint_id = input_param('推理接入点 ID')
         new_config['endpoint_id'] = endpoint_id
+        reasoning_effort = input_param('思考等级')
+        new_config['reasoning_effort'] = reasoning_effort
         model_name = 'doubao'
     elif model_family == 'ollama':
         base_url = input_param('BASE_URL', True)
