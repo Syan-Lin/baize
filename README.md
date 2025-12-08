@@ -342,3 +342,5 @@ The Sapir-Whorf hypothesis asserts that the structure of a language influences i
 
 ## 其他
 你可以使用 `baize --help` 查看所有命令和选项
+
+如果你需要自定义添加或修改模型名，例如调用最新的或未录入的模型，请在安装目录，默认是 `~/.baize/models.json` 中修改
