@@ -2,7 +2,8 @@ import os
 import logging
 from functools import wraps
 
-log_file = 'baize.log'
+log_dir = os.path.expanduser('~/.baize')
+log_file = os.path.join(log_dir, 'baize.log')
 if os.path.exists(log_file):
     os.remove(log_file)
 logging.basicConfig(filename=log_file, level=logging.INFO,
